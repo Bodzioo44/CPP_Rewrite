@@ -49,7 +49,7 @@ bool Board::IsSquareChecked(POS pos, Color color)
         }
     }
     //Queen and Bishop check
-    MOVES directions = {POS(1, 1), POS(-1, -1), POS(1, -1), POS(-1, 1)};
+    directions = {POS(1, 1), POS(-1, -1), POS(1, -1), POS(-1, 1)};
     for (POS dir : directions)
     {
         POS temp = pos;
@@ -85,7 +85,7 @@ bool Board::IsSquareChecked(POS pos, Color color)
         }
     }
     //Knight check
-    MOVES directions = {POS(2, 1), POS(2, -1), POS(-2, 1), POS(-2, -1), POS(1, 2), POS(1, -2), POS(-1, 2), POS(-1, -2)};
+    directions = {POS(2, 1), POS(2, -1), POS(-2, 1), POS(-2, -1), POS(1, 2), POS(1, -2), POS(-1, 2), POS(-1, -2)};
     for (POS dir : directions)
     {
         SquareState state = CheckSquare(dir, color);

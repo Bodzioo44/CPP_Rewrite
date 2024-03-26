@@ -32,12 +32,10 @@ MOVES Piece::ValidMoves(Board &board)
         {
             if (board.CheckSquare(make_pair(r, c), color) == SquareState::EMPTY)
             {
-                cout << "Valid move: " << r << ", " << c << endl;
                 moves.push_back(make_pair(r, c));
             }
             else if (board.CheckSquare(make_pair(r, c), color) == SquareState::TAKEN_BY_ENEMY)
             {
-                cout << "Valid move: " << r << ", " << c << endl;
                 moves.push_back(make_pair(r, c));
                 break;
             }

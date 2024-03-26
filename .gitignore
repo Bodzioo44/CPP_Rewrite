@@ -1,3 +1,4 @@
 main.sh
 .vscode
 compile.sh
+*.o

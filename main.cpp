@@ -1,9 +1,22 @@
 #include <iostream>
 #include "board.h"
+#include <QString>
+
+#include "QtDesigner.h"
 using namespace std;
 
-int main()
+
+void print(auto x);
+
+int main(int argc, char *argv[])
 {
+
+    QApplication app(argc, argv);
+    QMainWindow mainWindow;
+    Ui::MainWindow window;
+    window.setupUi(&mainWindow);
+    mainWindow.show();
+    return app.exec();
 
     Board b;
     while (true)
@@ -33,4 +46,15 @@ int main()
     }
     
     return 0;
+}
+
+
+
+void print(auto x)
+{
+    for (auto i : x)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
 }

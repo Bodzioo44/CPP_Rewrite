@@ -9,6 +9,7 @@
 #ifndef TEST_H
 #define TEST_H
 
+
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
@@ -26,6 +27,7 @@
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 
