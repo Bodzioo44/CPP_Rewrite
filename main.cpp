@@ -1,26 +1,31 @@
 #include <iostream>
 #include "board.h"
 #include <QString>
+#include <QApplication>
+#include <QPushButton>
 
 #include "QtDesigner.h"
+#include "MainWindow.cpp"
 using namespace std;
 
 
-void print(auto x);
+#include <QImage>
 
 int main(int argc, char *argv[])
 {
-
+    cout << "Hello World" << endl;
     QApplication app(argc, argv);
-    QMainWindow mainWindow;
-    Ui::MainWindow window;
-    window.setupUi(&mainWindow);
-    mainWindow.show();
+    //Create main window
+    MainWindow window;
+    window.show();
     return app.exec();
+
+    cout << "blyat" << endl;
 
     Board b;
     while (true)
     {
+        //app.processEvents();
         int row, col;
         cout << "Enter row: ";
         cin >> row;
@@ -46,15 +51,4 @@ int main(int argc, char *argv[])
     }
     
     return 0;
-}
-
-
-
-void print(auto x)
-{
-    for (auto i : x)
-    {
-        cout << i << " ";
-    }
-    cout << endl;
 }

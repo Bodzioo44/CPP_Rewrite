@@ -16,5 +16,5 @@ INCLUDEPATH += .
 # Input
 HEADERS += board.h piece.h QtDesigner.h
 FORMS += QtDesigner.ui
-SOURCES += board.cpp main.cpp piece.cpp
+SOURCES += board.cpp main.cpp piece.cpp MainWindow.cpp GameWidget.cpp game.cpp
 QT += core gui widgets

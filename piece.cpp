@@ -18,7 +18,7 @@ void Piece::Move(POS pos)
 {
     row = pos.first;
     col = pos.second;
-    cout << "Moving to " << pos.first << ", " << pos.second << endl;
+    std::cout << "Moving to " << pos.first << ", " << pos.second << std::endl;
 }
 
 MOVES Piece::ValidMoves(Board &board)
@@ -50,6 +50,11 @@ MOVES Piece::ValidMoves(Board &board)
     return moves;
 }
 
+POS Piece::GetPos()
+{
+    return make_pair(row, col);
+}
+
 Color Piece::GetColor()
 {
     return color;
@@ -64,20 +69,23 @@ string Piece::GetName()
 void Piece::Info()
 {
     string color_name = "";
-    switch (color)
-    {
-        case Color::WHITE:
-            color_name = "White";
-        case Color::BLACK:
-            color_name = "Black";
-    }
-    cout << "<" << color_name << " " << GetName() << " at: " << row << ", " << col << ">";
+    if (color == Color::WHITE) {color_name = "White";}
+    else {color_name = "Black";}
+    std::cout << "<" << color_name << " " << GetName() << " at: " << row << ", " << col << ">";
 }
+
+string Piece::GetPath()
+{
+    return path;
+}
+
+Piece::~Piece(){}
 
 
 Pawn::Pawn(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
 {
     firstMove = true;
+    AssignColorValues();
 }
 
 void Pawn::Move(POS pos)
@@ -85,7 +93,7 @@ void Pawn::Move(POS pos)
     row = pos.first;
     col = pos.second;
     firstMove = false;
-    cout << "Moving pawn to " << pos.first << ", " << pos.second << endl;
+    std::cout << "Moving pawn to " << pos.first << ", " << pos.second << std::endl;
 }
 
 MOVES Pawn::ValidMoves(Board &board)
@@ -134,11 +142,26 @@ MOVES Pawn::ValidMoves(Board &board)
 }
 
 
+void Pawn::AssignColorValues()
+{
+    switch (color)
+    {
+        case Color::WHITE:
+            path = "img/white_pawn.png";
+            break;
+        case Color::BLACK:
+            path = "img/black_pawn.png";
+            break;
+    }
+
+}
+
 
 Rook::Rook(int in_row, int in_col, Color in_color) : Piece (in_row, in_col, in_color)
 {
     firstMove = true;
     directions = {make_pair(1, 0), make_pair(-1, 0), make_pair(0, 1), make_pair(0, -1)};
+    AssignColorValues();
 }
 
 void Rook::Move(POS pos)
@@ -146,24 +169,67 @@ void Rook::Move(POS pos)
     row = pos.first;
     col = pos.second;
     firstMove = false;
-    cout << "Moving rook to " << pos.first << ", " << pos.second << endl;
+    std::cout << "Moving rook to " << pos.first << ", " << pos.second << std::endl;
 }
 
+
+void Rook::AssignColorValues()
+{
+    switch (color)
+    {
+        case Color::WHITE:
+            path = "img/white_rook.png";
+            break;
+        case Color::BLACK:
+            path = "img/black_rook.png";
+            break;
+    }
+}
 
 
 Bishop::Bishop(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
 {
     directions = {make_pair(1, 1), make_pair(1, -1), make_pair(-1, 1), make_pair(-1, -1)};
+    AssignColorValues();
 }
 
+
+void Bishop::AssignColorValues()
+{
+    switch (color)
+    {
+        case Color::WHITE:
+            path = "img/white_bishop.png";
+            break;
+        case Color::BLACK:
+            path = "img/black_bishop.png";
+            break;
+    }
+}
 
 Queen::Queen(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
 {
     directions = {make_pair(1, 1), make_pair(1, -1), make_pair(-1, 1), make_pair(-1, -1), make_pair(1, 0), make_pair(-1, 0), make_pair(0, 1), make_pair(0, -1)};
+    AssignColorValues();
 }
 
+void Queen::AssignColorValues()
+{
+    switch (color)
+    {
+        case Color::WHITE:
+            path = "img/white_queen.png";
+            break;
+        case Color::BLACK:
+            path = "img/black_queen.png";
+            break;
+    }
+}
 
-Knight::Knight(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color){}
+Knight::Knight(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
+{
+    AssignColorValues();
+}
 
 MOVES Knight::ValidMoves(Board &board)
 {
@@ -175,23 +241,34 @@ MOVES Knight::ValidMoves(Board &board)
         int c = col + dir.second;
         if (board.CheckSquare(make_pair(r, c), color) == SquareState::EMPTY)
         {
-            //cout << "Valid move: " << r << ", " << c << endl;
             moves.push_back(make_pair(r, c));
         }
         else if (board.CheckSquare(make_pair(r, c), color) == SquareState::TAKEN_BY_ENEMY)
         {
-            //cout << "Valid move: " << r << ", " << c << endl;
             moves.push_back(make_pair(r, c));
         }
     }
     return moves;
 }
 
+void Knight::AssignColorValues()
+{
+    switch (color)
+    {
+        case Color::WHITE:
+            path = "img/white_knight.png";
+            break;
+        case Color::BLACK:
+            path = "img/black_knight.png";
+            break;
+    }
+}
 
 
 King::King(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
 {
     firstMove = true;
+    AssignColorValues();
 }
 
 void King::Move(POS pos)
@@ -199,7 +276,7 @@ void King::Move(POS pos)
     row = pos.first;
     col = pos.second;
     firstMove = false;
-    cout << "Moving king to " << pos.first << ", " << pos.second << endl;
+    std::cout << "Moving king to " << pos.first << ", " << pos.second << std::endl;
 }
 
 
@@ -213,10 +290,21 @@ MOVES King::ValidMoves(Board &board)
         int c = col + dir.second;
         if (board.CheckSquare(make_pair(r, c), color) == SquareState::EMPTY || board.CheckSquare(make_pair(r, c), color) == SquareState::TAKEN_BY_ENEMY)
         {
-            //cout << "Valid move: " << r << ", " << c << endl;
             moves.push_back(make_pair(r, c));
         }
     }
     return moves;
 }
 
+void King::AssignColorValues()
+{
+    switch (color)
+    {
+        case Color::WHITE:
+            path = "img/white_king.png";
+            break;
+        case Color::BLACK:
+            path = "img/black_king.png";
+            break;
+    }
+}

@@ -5,6 +5,7 @@ using namespace std;
 
 Board::Board()
 {
+    cout << "Board created" << endl;
     board = {};
     CreateBoard();
     PrintBoard();

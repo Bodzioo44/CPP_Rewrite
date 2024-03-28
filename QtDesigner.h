@@ -1,14 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'PyQtDesigner.ui'
+** Form generated from reading UI file 'QtDesigner.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.15.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef TEST_H
-#define TEST_H
-
+#ifndef QTDESIGNER_H
+#define QTDESIGNER_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
@@ -27,7 +26,6 @@
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-//#include <QString>
 
 QT_BEGIN_NAMESPACE
 
@@ -393,4 +391,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // TEST_H
+#endif // QTDESIGNER_H
