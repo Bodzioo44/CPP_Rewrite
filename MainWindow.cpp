@@ -4,9 +4,10 @@
 #include <iostream>
 #include <QObject>
 
+
 class MainWindow: public QMainWindow, public Ui::MainWindow
 {
-    //Q_OBJECT
+    Q_OBJECT
 public:
     MainWindow()
     {
@@ -31,7 +32,6 @@ public:
 
 
     }
-    ~MainWindow() {};
 private: //slots:
     void Online_Button_Action()
     {

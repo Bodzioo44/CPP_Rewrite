@@ -146,9 +146,10 @@ bool Board::IsSquareChecked(POS pos, Color color)
 void Board::Move(POS start, POS end)
 {
     Piece* p = board[start.first][start.second];
-    NukeTile(end);
-    p->Move(end);
-    board[end.first][end.second] = p;
+    NukeTile(end); //If there is a piece at the end, nuke it
+    p->Move(end); //Move the piece
+    board[start.first][start.second] = nullptr; //Remove the piece from the start
+    board[end.first][end.second] = p; //Place the piece at the end
 }
 
 void Board::NukeTile(POS pos)
@@ -225,7 +226,7 @@ void Board::PrintBoard()
             }
             else
             {
-                p->Info();
+                cout << p->Info();
             }
         }
         cout << endl;

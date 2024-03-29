@@ -143,7 +143,10 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		CPP_Rewrite.pro board.h \
 		piece.h \
-		QtDesigner.h board.cpp \
+		QtDesigner.h \
+		game.h \
+		GameWidget.h \
+		MainWindow.h board.cpp \
 		main.cpp \
 		piece.cpp \
 		game.cpp
@@ -338,7 +341,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents board.h piece.h QtDesigner.h $(DISTDIR)/
+	$(COPY_FILE) --parents board.h piece.h QtDesigner.h game.h GameWidget.h MainWindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents board.cpp main.cpp piece.cpp game.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents QtDesigner.ui $(DISTDIR)/
 

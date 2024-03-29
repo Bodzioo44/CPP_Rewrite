@@ -10,7 +10,9 @@ Game::Game(Color player_color_in)
 {
     player_color = player_color_in;
     turn = Color::WHITE;
-    board = Board();
+    //cout << "before board creatinon inside game constructor" << endl;
+    //board = Board();
+    highlighted_squares = {};
     running = true;
     selected = nullptr;
 
@@ -49,8 +51,8 @@ void Game::Select(POS pos)
         }
         else
         {
-            cout << "Selected: "; current_square->Info(); cout << endl;
             selected = current_square;
+            cout << "Selected: " << selected->Info() << endl;
             valid_moves = selected->ValidMoves(board);
             if (valid_moves.size() != 0)
             {
@@ -63,9 +65,9 @@ void Game::Select(POS pos)
             }
         }
     }
-    else if (selected == current_square)
+    else if (selected != nullptr && selected == current_square)
     {
-        cout << "Deselected: "; selected->Info(); cout << endl;
+        cout << "Deselected: " << selected->Info() << endl;
         highlighted_squares.clear();
         selected = nullptr;
     }
@@ -73,6 +75,7 @@ void Game::Select(POS pos)
     {
         if (find(valid_moves.begin(), valid_moves.end(), pos) != valid_moves.end())
         {
+            cout << "Moving: " << selected->Info() << " to " << row << ", " << col << endl;
             board.Move(selected->GetPos(), pos);
             highlighted_squares.clear();
             //call update?
@@ -82,11 +85,10 @@ void Game::Select(POS pos)
         }
     }
 
-
 }
 
 
-Board* Game::GetBoard()
+Board& Game::GetBoard()
 {
-    return &board;
+    return board;
 }

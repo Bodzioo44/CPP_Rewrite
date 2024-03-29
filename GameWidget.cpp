@@ -4,19 +4,7 @@
 #include <iostream>
 using namespace std;
 
-
-
-/*
-GameWidget::GameWidget(GameType game_type_in, Color player_color_in)
-{
-    game = Game();
-    board_ptr = game.GetBoard();
-}
-*/
-
-GameWidget::GameWidget(GameType game_type_in, Color player_color_in): game(Game(player_color_in)), board_ptr(game.GetBoard())
-{
-}
+GameWidget::GameWidget(GameType game_type_in, Color player_color_in): game(Game(player_color_in)){}
 
 //TODO Fix the damn scaling, so it keep ratio, and stays a square!
 void GameWidget::resizeEvent(QResizeEvent*)
@@ -37,7 +25,8 @@ void GameWidget::mousePressEvent(QMouseEvent* event)
     if (row >= 0 && row < 8 && col >= 0 && col < 8)
     {
         cout << "Clicked on " << row << ", " << col << endl;
-        //TODO Call select function. (Create separate class for game? keep everything inside board?)
+        game.Select(make_pair(row, col));
+        update();
     }
     else {cout << "Clicked outside the board" << endl;}
 }
@@ -48,7 +37,7 @@ void GameWidget::paintEvent(QPaintEvent*)
     QPainter painter(this);
     DrawSquares(painter);   
     DrawPieces(painter);
-    //DrawHighlight(painter, game.GetHighlightedSquares());
+    DrawHighlight(painter, game.GetHighlightedSquares());
 }
 
 void GameWidget::DrawHighlight(QPainter &painter, MOVES squares)
@@ -89,7 +78,7 @@ void GameWidget::DrawPieces(QPainter &painter)
     {
         for (int j = 0; j < 8; j++)
         {
-            Piece* p = board_ptr->GetPiece(make_pair(i, j));
+            Piece* p = game.GetBoard().GetPiece(make_pair(i, j));
             if (p != nullptr)
             {   
                 QImage image(p->GetPath().c_str());

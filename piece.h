@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 using namespace std;
-
+//TODO fix them imports
 class Board;
 //#define POS pair<int, int>
 //#define MOVES vector<POS>
@@ -27,13 +27,14 @@ public:
     string GetName();
     Color GetColor();
     string GetPath();
-    void Info();
+    //TODO whats the difference between Info and AssignColorValues?;
+    string Info();
 protected:
     int row;
     int col;
     string path;
     Color color;
-    MOVES directions = {};
+    MOVES directions;
 
 };
 
@@ -45,7 +46,6 @@ public:
     MOVES ValidMoves(Board &board) override;
     void Move(POS pos) override;
     void AssignColorValues() override;
-    //void Info() override;
 private:
     bool firstMove;
 };
@@ -56,7 +56,6 @@ class Rook : public Piece
         Rook(int in_row, int in_col, Color in_color);
         void Move(POS pos) override;
         void AssignColorValues() override;
-        //void Info() override;
     private:
         bool firstMove;
         MOVES directions;
@@ -68,7 +67,6 @@ class Knight : public Piece
         Knight(int in_row, int in_col, Color in_color);
         MOVES ValidMoves(Board &board) override;
         void AssignColorValues() override;
-        //void Info() override;
 };
 
 class Bishop : public Piece
@@ -76,7 +74,6 @@ class Bishop : public Piece
     public:
         Bishop(int in_row, int in_col, Color in_color);
         void AssignColorValues() override;
-        //void Info() override;
     private:
         MOVES directions;
 };
@@ -86,7 +83,6 @@ class Queen : public Piece
     public:
         Queen(int in_row, int in_col, Color in_color);
         void AssignColorValues() override;
-        //void Info() override;
     private:
         MOVES directions;
 };
@@ -98,7 +94,6 @@ class King : public Piece
         void Move(POS pos) override;
         MOVES ValidMoves(Board &board) override;
         void AssignColorValues() override;
-        //void Info() override;
 
     private:
         bool firstMove;

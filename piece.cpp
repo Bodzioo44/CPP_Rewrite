@@ -5,7 +5,6 @@
 #include <vector>
 #include <typeinfo>
 #include <string>
-using namespace std;
 
 Piece::Piece(int in_row, int in_col, Color in_color)
 {
@@ -18,14 +17,15 @@ void Piece::Move(POS pos)
 {
     row = pos.first;
     col = pos.second;
-    std::cout << "Moving to " << pos.first << ", " << pos.second << std::endl;
 }
 
 MOVES Piece::ValidMoves(Board &board)
 {
+    std::cout << "shared valid mvoes" << std::endl;
     MOVES moves = {};
     for (POS dir : directions)
     {
+        std::cout <<"we got here" << endl;
         int r = row + dir.first;
         int c = col + dir.second;
         while (r >= 0 && r < 8 && c >= 0 && c < 8)
@@ -66,12 +66,12 @@ string Piece::GetName()
     return name;
 }
 
-void Piece::Info()
+string Piece::Info()
 {
     string color_name = "";
     if (color == Color::WHITE) {color_name = "White";}
     else {color_name = "Black";}
-    std::cout << "<" << color_name << " " << GetName() << " at: " << row << ", " << col << ">";
+    return "<" + color_name + " " + GetName() + " at: " + std::to_string(row) + ", " + std::to_string(col) + ">";
 }
 
 string Piece::GetPath()
@@ -79,7 +79,10 @@ string Piece::GetPath()
     return path;
 }
 
-Piece::~Piece(){}
+Piece::~Piece()
+{
+    std::cout << "Absolutly obliterated" << std::endl;
+}
 
 
 Pawn::Pawn(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
@@ -93,7 +96,6 @@ void Pawn::Move(POS pos)
     row = pos.first;
     col = pos.second;
     firstMove = false;
-    std::cout << "Moving pawn to " << pos.first << ", " << pos.second << std::endl;
 }
 
 MOVES Pawn::ValidMoves(Board &board)
@@ -169,7 +171,6 @@ void Rook::Move(POS pos)
     row = pos.first;
     col = pos.second;
     firstMove = false;
-    std::cout << "Moving rook to " << pos.first << ", " << pos.second << std::endl;
 }
 
 
@@ -276,7 +277,6 @@ void King::Move(POS pos)
     row = pos.first;
     col = pos.second;
     firstMove = false;
-    std::cout << "Moving king to " << pos.first << ", " << pos.second << std::endl;
 }
 
 

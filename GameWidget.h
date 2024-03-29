@@ -27,8 +27,7 @@ class GameWidget : public QWidget
     protected:
         constexpr static float scale = 0.75;
         int square_size;
-        Game game;
-        Board* board_ptr;
+        Game game; //however this doesnt initialize the game, since the game doesnt have a default constructor.
 };
 
 
