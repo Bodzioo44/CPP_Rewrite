@@ -10,17 +10,28 @@ const MOVES Rook::directions = {POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
 const MOVES Bishop::directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1)};
 const MOVES Queen::directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1), POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
 
+
+//Are these needed?
+Piece::~Piece(){}
+Pawn::~Pawn(){}
+Rook::~Rook(){}
+Bishop::~Bishop(){}
+Queen::~Queen(){}
+Knight::~Knight(){}
+King::~King(){}
+
 Piece::Piece(Color in_color)
 {
     color = in_color;
 }
+Piece::Piece(const Piece &p): color(p.color), path(p.path){}
 
 MOVES Piece::EliminateInvalidMoves(Board &board, MOVES moves, POS pos)
 {
     MOVES valid_moves = {};
     for (POS move : moves)
     {
-        if (board.IsMoveValid(pos, move))
+        if (board.IsMoveValid(pos, move, color))
         {
             valid_moves.push_back(move);
         }
@@ -28,7 +39,7 @@ MOVES Piece::EliminateInvalidMoves(Board &board, MOVES moves, POS pos)
     return valid_moves;
 }
 
-//FIXME add middle class for shared valid moves
+// What to do with these?
 MOVES Piece::GetMoves(){}
 void Piece::FirstMove(){}
 
@@ -87,10 +98,6 @@ string Piece::GetPath()
     return path;
 }
 
-Piece::~Piece()
-{
-    std::cout << "Absolutly obliterated" << std::endl;
-}
 
 
 Pawn::Pawn(Color in_color) : Piece(in_color)
@@ -100,10 +107,17 @@ Pawn::Pawn(Color in_color) : Piece(in_color)
 }
 
 
+Pawn::Pawn(const Pawn &p) : Piece(p), firstMove(p.firstMove){}
+
 void Pawn::FirstMove()
 {
     firstMove = false;
 
+}
+
+Pawn* Pawn::Clone()
+{
+    return new Pawn(*this);
 }
 
 MOVES Pawn::ValidMoves(Board &board, POS pos)
@@ -175,14 +189,26 @@ Rook::Rook(Color in_color) : Piece (in_color)
 }
 
 
+Rook::Rook(const Rook &r) : Piece(r), firstMove(r.firstMove){}
+
 void Rook::FirstMove()
 {
     firstMove = false;
 }
 
+Rook* Rook::Clone()
+{
+    return new Rook(*this);
+}
+
 
 MOVES Rook::GetMoves() {return directions;}
 
+
+bool Rook::IsFirstMove()
+{
+    return firstMove;
+}
 
 void Rook::AssignColorValues()
 {
@@ -200,6 +226,13 @@ void Rook::AssignColorValues()
 Bishop::Bishop(Color in_color) : Piece(in_color)
 {
     AssignColorValues();
+}
+
+Bishop::Bishop(const Bishop &p) : Piece(p){}
+
+Bishop* Bishop::Clone()
+{
+    return new Bishop(*this);
 }
 
 MOVES Bishop::GetMoves() {return directions;}
@@ -223,6 +256,14 @@ Queen::Queen(Color in_color) : Piece(in_color)
     AssignColorValues();
 }
 
+Queen::Queen(const Queen &q) : Piece(q){}
+
+Queen* Queen::Clone()
+{
+    return new Queen(*this);
+}
+
+
 MOVES Queen::GetMoves() {return directions;}
 
 void Queen::AssignColorValues()
@@ -242,6 +283,13 @@ Knight::Knight(Color in_color) : Piece(in_color)
 {
     AssignColorValues();
 }
+Knight::Knight(const Knight &k) : Piece(k){}
+
+Knight* Knight::Clone()
+{
+    return new Knight(*this);
+}
+
 
 MOVES Knight::ValidMoves(Board &board, POS pos)
 {
@@ -284,6 +332,13 @@ King::King(Color in_color) : Piece(in_color)
     firstMove = true;
     AssignColorValues();
 }
+King::King(const King &p) : Piece(p), firstMove(p.firstMove){}
+
+King* King::Clone()
+{
+    return new King(*this);
+}
+
 
 void King::FirstMove()
 {
@@ -292,7 +347,7 @@ void King::FirstMove()
 
 MOVES King::ValidMoves(Board &board, POS pos)
 {
-    int row = pos.first;void FirstMove();
+    int row = pos.first;
     int col = pos.second;
     MOVES moves = {};
     MOVES directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1), POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
@@ -303,6 +358,46 @@ MOVES King::ValidMoves(Board &board, POS pos)
         if (board.CheckSquare(POS(r, c), color) == SquareState::EMPTY || board.CheckSquare(POS(r, c), color) == SquareState::TAKEN_BY_ENEMY)
         {
             moves.push_back(POS(r, c));
+        }
+    }
+
+    if (firstMove)
+    {
+        if (board.CheckSquare(POS(row, col + 1), color) == SquareState::EMPTY && board.CheckSquare(POS(row, col + 2), color) == SquareState::EMPTY)
+        {
+            Piece* rook = board.GetPiece(POS(row, col + 3));
+            if (rook != nullptr && rook->GetName() == "Rook" && dynamic_cast<Rook*>(rook)->IsFirstMove())
+            {
+                bool loop = true;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (board.IsSquareChecked(POS(row, col + i), color))
+                    {
+                        loop = false;
+                        break;
+                    }
+                }
+                if (loop) {moves.push_back(POS(row, 7));}
+            }
+        }
+        if (board.CheckSquare(POS(row, col - 1), color) == SquareState::EMPTY && board.CheckSquare(POS(row, col - 2), color) == SquareState::EMPTY && board.CheckSquare(POS(row, col - 3), color) == SquareState::EMPTY)
+        {
+            Piece* rook = board.GetPiece(POS(row, col - 4));
+            if (rook != nullptr && rook->GetName() == "Rook" && dynamic_cast<Rook*>(rook)->IsFirstMove())
+            {
+                bool loop = true;
+                for (int i = 0; i < 5; i++)
+                {
+                    if (board.IsSquareChecked(POS(row, col - i), color))
+                    {
+                        loop = false;
+                        break;
+                    }
+                    
+                }
+                if (loop) {moves.push_back(POS(row, 0));}
+                
+            }
         }
     }
     return EliminateInvalidMoves(board, moves, pos);

@@ -5,10 +5,28 @@ using namespace std;
 
 Board::Board()
 {
-    cout << "Board created" << endl;
+    //cout << "Board created" << endl;
     board = {};
     CreateBoard();
     PrintBoard();
+}
+
+Board::Board(const Board &b)
+{
+    //cout << "Board copied" << endl;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (b.board[i][j] != nullptr)
+            {
+                board[i][j] = b.board[i][j]->Clone();
+            }
+            else {board[i][j] = nullptr;}
+        }
+    }
+    whiteKing = b.whiteKing;
+    blackKing = b.blackKing;
 }
 
 Board::~Board()
@@ -23,9 +41,10 @@ Board::~Board()
             }
         }
     }
+    //cout << "Board destroyed" << endl;
 }
 
-bool Board::IsSquareChecked(POS pos, Color color)
+bool Board::IsSquareChecked(POS pos, Color color) const
 {
     //Queen and Rook check
     MOVES directions = {POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
@@ -169,24 +188,16 @@ bool Board::IsSquareChecked(POS pos, Color color)
     return false;
 }
 
-bool Board::IsMoveValid(POS start, POS end)
+bool Board::IsMoveValid(POS start, POS end, Color color_in) const
 {
-    return true;
-    Board new_board = *this;
+    Board new_board = Board(*this);
     new_board.Move(start, end);
-    Color KingColor = new_board.GetPiece(end)->GetColor();
-    return false;
-    /*
-    if (new_board.IsSquareChecked(new_board.GetKing(KingColor)->GetPos(), KingColor))
-    {
-        return false;
-    }
-    else {return true;}
-    */
+    POS KingPOS = new_board.GetKingPOS(color_in);
+    return !new_board.IsSquareChecked(KingPOS, color_in);
 }
 
 
-Piece* Board::GetKing(Color color)
+POS Board::GetKingPOS(Color color) const
 {
     if (color == Color::WHITE)
     {
@@ -201,15 +212,67 @@ Piece* Board::GetKing(Color color)
 void Board::Move(POS start, POS end)
 {
     Piece* p = board[start.first][start.second];
-    NukeTile(end); //If there is a piece at the end, nuke it
-    string name = p->GetName();
-    if (name == "King" || name == "Rook" || name == "Pawn")
+    if (p->GetName() == "King" && abs(start.second - end.second) > 1)//Castling check
     {
-        p->FirstMove();   
+        if (start.second > end.second)//long castling
+        {
+            board[start.first][start.second - 2] = board[start.first][start.second];
+            board[start.first][start.second] = nullptr;
+            UpdateKingPOS(POS(start.first, start.second - 2));
+
+            board[start.first][start.second - 1] = board[end.first][end.second];
+            board[end.first][end.second] = nullptr;
+            
+        }
+        else//short castling
+        {
+            board[start.first][start.second + 2] = board[start.first][start.second];
+            board[start.first][start.second] = nullptr;
+            UpdateKingPOS(POS(start.first, start.second + 2));
+
+            board[start.first][start.second + 1] = board[end.first][end.second];
+            board[end.first][end.second] = nullptr;
+        }
+        p->FirstMove();
     }
-    board[start.first][start.second] = nullptr; //Remove the piece from the start
-    board[end.first][end.second] = p; //Place the piece at the end
+    else if (!true) {}
+    else
+    {
+        NukeTile(end); //If there is a piece at the end, delete it
+        string name = p->GetName();
+        if (name == "King" || name == "Rook" || name == "Pawn")
+        {
+            p->FirstMove();   
+        }
+        if (name == "King")
+        {
+            if (p->GetColor() == Color::WHITE)
+            {
+                whiteKing = end;
+            }
+            else
+            {
+                blackKing = end;
+            }
+        }
+        board[start.first][start.second] = nullptr; //Remove the piece from the start
+        board[end.first][end.second] = p; //Place the piece at the end
+    }
+    
 }
+
+void Board::UpdateKingPOS(POS end)
+{
+    if (board[end.first][end.second]->GetColor() == Color::WHITE)
+    {
+        whiteKing = end;
+    }
+    else
+    {
+        blackKing = end;
+    }
+}
+
 
 void Board::NukeTile(POS pos)
 {
@@ -220,7 +283,7 @@ void Board::NukeTile(POS pos)
     }
 }
 
-SquareState Board::CheckSquare(POS pos, Color color)
+SquareState Board::CheckSquare(POS pos, Color color) const
 {
     if (pos.first < 0 || pos.first > 7 || pos.second < 0 || pos.second > 7)
     {
@@ -260,7 +323,7 @@ void Board::CreateBoard()
     board[0][5] = new Bishop(Color::BLACK);
     board[0][3] = new Queen(Color::BLACK);
     board[0][4] = new King( Color::BLACK);
-    blackKing = board[0][4];
+    blackKing = POS(0,4);
 
     board[7][0] = new Rook(Color::WHITE);
     board[7][7] = new Rook(Color::WHITE);
@@ -270,10 +333,10 @@ void Board::CreateBoard()
     board[7][5] = new Bishop(Color::WHITE);
     board[7][3] = new Queen(Color::WHITE);
     board[7][4] = new King(Color::WHITE);
-    whiteKing = board[7][4];
+    whiteKing = POS(7,4);
 }
 
-void Board::PrintBoard()
+void Board::PrintBoard() const
 {   
     for (ROW row : board)
     {
@@ -290,12 +353,9 @@ void Board::PrintBoard()
         }
         cout << endl;
     }
-
 }
 
-
-
-Piece* Board::GetPiece(POS pos)
+Piece* Board::GetPiece(POS pos) const
 {
     return board[pos.first][pos.second];
 }

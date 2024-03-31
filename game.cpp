@@ -1,8 +1,5 @@
 #include <algorithm>
 #include "game.h"
-
-
-
 #include <iostream>
 using namespace std;
 
@@ -10,13 +7,9 @@ Game::Game(Color player_color_in)
 {
     player_color = player_color_in;
     turn = Color::WHITE;
-    //cout << "before board creatinon inside game constructor" << endl;
-    //board = Board();
     highlighted_squares = {};
     running = true;
     selected = nullptr;
-    selected_pos;
-
 }
 
 MOVES Game::GetHighlightedSquares()
@@ -56,6 +49,7 @@ void Game::Select(POS pos)
             selected_pos = pos;
             cout << "Selected: " << selected->Info() << endl;
             valid_moves = selected->ValidMoves(board, selected_pos);
+            cout << "Valid moves: " << endl;
             if (valid_moves.size() != 0)
             {
                 highlighted_squares = valid_moves;

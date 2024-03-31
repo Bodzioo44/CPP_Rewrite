@@ -19,7 +19,9 @@ class Piece
 {
 public: 
     Piece(Color in_color);
+    Piece(const Piece &piece);
     virtual ~Piece();
+    virtual Piece* Clone() = 0;
     virtual MOVES ValidMoves(Board &board, POS pos);
     virtual MOVES GetMoves();
     virtual void AssignColorValues() = 0;
@@ -28,11 +30,10 @@ public:
     string GetName();
     Color GetColor();
     string GetPath();
-    //TODO whats the difference between Info and AssignColorValues?;
     string Info();
 protected:
-    string path;
     Color color;
+    string path;
     const static MOVES directions;
 
 };
@@ -42,6 +43,9 @@ class Pawn : public Piece
 {
 public:
     Pawn(Color in_color);
+    Pawn(const Pawn &p);
+    ~Pawn() override;
+    Pawn* Clone() override;
     MOVES ValidMoves(Board &board, POS pos) override;
     void FirstMove();
     void AssignColorValues() override;
@@ -53,8 +57,12 @@ class Rook : public Piece
 {
     public:
         Rook(Color in_color);
+        Rook(const Rook &r);
+        ~Rook() override;
+        Rook* Clone() override;
         MOVES GetMoves() override;
         void FirstMove();
+        bool IsFirstMove();
         void AssignColorValues() override;
     private:
         bool firstMove;
@@ -65,6 +73,9 @@ class Knight : public Piece
 {
     public:
         Knight(Color in_color);
+        Knight(const Knight &p);
+        ~Knight() override;
+        Knight* Clone() override;
         MOVES ValidMoves(Board &board, POS pos) override;
         void AssignColorValues() override;
 };
@@ -73,6 +84,9 @@ class Bishop : public Piece
 {
     public:
         Bishop(Color in_color);
+        Bishop(const Bishop &p);
+        ~Bishop() override;
+        Bishop* Clone() override;
         MOVES GetMoves() override;
         void AssignColorValues() override;
     private:
@@ -83,6 +97,9 @@ class Queen : public Piece
 {
     public:
         Queen(Color in_color);
+        Queen(const Queen &q);
+        ~Queen() override;
+        Queen* Clone() override;
         MOVES GetMoves() override;
         void AssignColorValues() override;
     private:
@@ -93,6 +110,9 @@ class King : public Piece
 {
     public:
         King(Color in_color);
+        King(const King &k);
+        ~King() override;
+        King* Clone() override;
         MOVES ValidMoves(Board &board, POS pos) override;
         void FirstMove();
         void AssignColorValues() override;
