@@ -406,6 +406,7 @@ main.o: main.cpp board.h \
 		piece.h \
 		QtDesigner.h \
 		MainWindow.cpp \
+		MainWindow.h \
 		GameWidget.cpp \
 		GameWidget.h \
 		game.h

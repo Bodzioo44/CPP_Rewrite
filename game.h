@@ -20,8 +20,6 @@ class Game
         MOVES valid_moves;
         MOVES highlighted_squares;
         bool running;
-
-
 };
 
 #endif

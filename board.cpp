@@ -11,6 +11,20 @@ Board::Board()
     PrintBoard();
 }
 
+Board::~Board()
+{
+    for (ROW row : board)
+    {
+        for (Piece* p : row)
+        {
+            if (p != nullptr)
+            {
+                delete p;
+            }
+        }
+    }
+}
+
 bool Board::IsSquareChecked(POS pos, Color color)
 {
     //Queen and Rook check
@@ -140,8 +154,49 @@ bool Board::IsSquareChecked(POS pos, Color color)
             break;
     }
     //King Check
+    directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1), POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
+    for (POS dir : directions)
+    {
+        if (CheckSquare(POS(pos.first + dir.first, pos.second + dir.second), color) == SquareState::TAKEN_BY_ENEMY)
+        {
+            Piece* p = GetPiece(POS(pos.first + dir.first, pos.second + dir.second));
+            if (p->GetName() == "King")
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
+bool Board::IsMoveValid(POS start, POS end)
+{
+    Board new_board = *this;
+    return true;
+    new_board.Move(start, end);
+    Color KingColor = new_board.GetPiece(end)->GetColor();
+    return false;
+    /*
+    if (new_board.IsSquareChecked(new_board.GetKing(KingColor)->GetPos(), KingColor))
+    {
+        return false;
+    }
+    else {return true;}
+    */
+}
+
+
+Piece* Board::GetKing(Color color)
+{
+    if (color == Color::WHITE)
+    {
+        return whiteKing;
+    }
+    else
+    {
+        return blackKing;
+    }
+}
 
 void Board::Move(POS start, POS end)
 {

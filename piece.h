@@ -17,12 +17,14 @@ enum class Color {WHITE, BLACK};
 
 class Piece
 {
-public:
+public: 
     Piece(int in_row, int in_col, Color in_color);
     virtual ~Piece();
     virtual void Move(POS pos);
     virtual MOVES ValidMoves(Board &board);
+    virtual MOVES GetMoves();
     virtual void AssignColorValues() = 0;
+    MOVES EliminateInvalidMoves(Board &board, MOVES moves, POS pos);
     POS GetPos();
     string GetName();
     Color GetColor();
@@ -34,7 +36,7 @@ protected:
     int col;
     string path;
     Color color;
-    MOVES directions;
+    const static MOVES directions;
 
 };
 
@@ -55,10 +57,11 @@ class Rook : public Piece
     public:
         Rook(int in_row, int in_col, Color in_color);
         void Move(POS pos) override;
+        MOVES GetMoves() override;
         void AssignColorValues() override;
     private:
         bool firstMove;
-        MOVES directions;
+        const static MOVES directions;
 };
 
 class Knight : public Piece
@@ -73,18 +76,20 @@ class Bishop : public Piece
 {
     public:
         Bishop(int in_row, int in_col, Color in_color);
+        MOVES GetMoves() override;
         void AssignColorValues() override;
     private:
-        MOVES directions;
+        const static MOVES directions;
 };
 
 class Queen : public Piece
 {
     public:
         Queen(int in_row, int in_col, Color in_color);
+        MOVES GetMoves() override;
         void AssignColorValues() override;
     private:
-        MOVES directions;
+        const static MOVES directions;
 };
 
 class King : public Piece

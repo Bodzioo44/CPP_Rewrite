@@ -6,11 +6,16 @@
 #include <typeinfo>
 #include <string>
 
+const MOVES Rook::directions = {POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
+const MOVES Bishop::directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1)};
+const MOVES Queen::directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1), POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
+
 Piece::Piece(int in_row, int in_col, Color in_color)
 {
     row = in_row;
     col = in_col;
     color = in_color;
+    //cout << "piece directions: " << &directions << endl;
 }
 
 void Piece::Move(POS pos)
@@ -19,27 +24,44 @@ void Piece::Move(POS pos)
     col = pos.second;
 }
 
+MOVES Piece::EliminateInvalidMoves(Board &board, MOVES moves, POS pos)
+{
+    MOVES valid_moves = {};
+    for (POS move : moves)
+    {
+        if (board.IsMoveValid(pos, move))
+        {
+            valid_moves.push_back(move);
+        }
+    }
+    return valid_moves;
+}
+
+//FIXME add middle class for shared valid moves
+MOVES Piece::GetMoves(){}
+
 MOVES Piece::ValidMoves(Board &board)
 {
-    std::cout << "shared valid mvoes" << std::endl;
+    //std::cout << "shared valid mvoes" << std::endl;
     MOVES moves = {};
-    for (POS dir : directions)
+    //std::cout << "Inside Shared Valid_MOves" << &directions << std::endl;
+    for (POS dir : GetMoves())
     {
-        std::cout <<"we got here" << endl;
+        //std::cout <<"we got here" << endl;
         int r = row + dir.first;
         int c = col + dir.second;
         while (r >= 0 && r < 8 && c >= 0 && c < 8)
         {
-            if (board.CheckSquare(make_pair(r, c), color) == SquareState::EMPTY)
+            if (board.CheckSquare(POS(r, c), color) == SquareState::EMPTY)
             {
-                moves.push_back(make_pair(r, c));
+                moves.push_back(POS(r, c));
             }
-            else if (board.CheckSquare(make_pair(r, c), color) == SquareState::TAKEN_BY_ENEMY)
+            else if (board.CheckSquare(POS(r, c), color) == SquareState::TAKEN_BY_ENEMY)
             {
-                moves.push_back(make_pair(r, c));
+                moves.push_back(POS(r, c));
                 break;
             }
-            else if (board.CheckSquare(make_pair(r, c), color) == SquareState::TAKEN_BY_FRIENDLY)
+            else if (board.CheckSquare(POS(r, c), color) == SquareState::TAKEN_BY_FRIENDLY)
             {
                 break;
             }
@@ -47,12 +69,12 @@ MOVES Piece::ValidMoves(Board &board)
             c += dir.second;
         }
     }
-    return moves;
+    return EliminateInvalidMoves(board, moves, GetPos());
 }
 
 POS Piece::GetPos()
 {
-    return make_pair(row, col);
+    return POS(row, col);
 }
 
 Color Piece::GetColor()
@@ -104,43 +126,43 @@ MOVES Pawn::ValidMoves(Board &board)
     switch (color)
     {
         case Color::BLACK:
-            if (board.CheckSquare(make_pair(row + 1, col), color) == SquareState::EMPTY)
+            if (board.CheckSquare(POS(row + 1, col), color) == SquareState::EMPTY)
             {
-                moves.push_back(make_pair(row + 1, col));
-                if (firstMove && board.CheckSquare(make_pair(row + 2, col), color) == SquareState::EMPTY)
+                moves.push_back(POS(row + 1, col));
+                if (firstMove && board.CheckSquare(POS(row + 2, col), color) == SquareState::EMPTY)
                 {
-                    moves.push_back(make_pair(row + 2, col));
+                    moves.push_back(POS(row + 2, col));
                 }
             }
-            if (board.CheckSquare(make_pair(row + 1, col + 1), color) == SquareState::TAKEN_BY_ENEMY)
+            if (board.CheckSquare(POS(row + 1, col + 1), color) == SquareState::TAKEN_BY_ENEMY)
             {
-                moves.push_back(make_pair(row + 1, col + 1));
+                moves.push_back(POS(row + 1, col + 1));
             }
-            if (board.CheckSquare(make_pair(row + 1, col - 1), color) == SquareState::TAKEN_BY_ENEMY)
+            if (board.CheckSquare(POS(row + 1, col - 1), color) == SquareState::TAKEN_BY_ENEMY)
             {
-                moves.push_back(make_pair(row + 1, col - 1));
+                moves.push_back(POS(row + 1, col - 1));
             }
             break;
         case Color::WHITE:
-            if (board.CheckSquare(make_pair(row - 1, col), color) == SquareState::EMPTY)
+            if (board.CheckSquare(POS(row - 1, col), color) == SquareState::EMPTY)
             {
-                moves.push_back(make_pair(row - 1, col));
-                if (firstMove && board.CheckSquare(make_pair(row - 2, col), color) == SquareState::EMPTY)
+                moves.push_back(POS(row - 1, col));
+                if (firstMove && board.CheckSquare(POS(row - 2, col), color) == SquareState::EMPTY)
                 {
-                    moves.push_back(make_pair(row - 2, col));
+                    moves.push_back(POS(row - 2, col));
                 }
             }
-            if (board.CheckSquare(make_pair(row - 1, col + 1), color) == SquareState::TAKEN_BY_ENEMY)
+            if (board.CheckSquare(POS(row - 1, col + 1), color) == SquareState::TAKEN_BY_ENEMY)
             {
-                moves.push_back(make_pair(row - 1, col + 1));
+                moves.push_back(POS(row - 1, col + 1));
             }
-            if (board.CheckSquare(make_pair(row - 1, col - 1), color) == SquareState::TAKEN_BY_ENEMY)
+            if (board.CheckSquare(POS(row - 1, col - 1), color) == SquareState::TAKEN_BY_ENEMY)
             {
-                moves.push_back(make_pair(row - 1, col - 1));
+                moves.push_back(POS(row - 1, col - 1));
             }
             break;
     }
-    return moves;
+    return EliminateInvalidMoves(board, moves, GetPos());
 }
 
 
@@ -158,13 +180,14 @@ void Pawn::AssignColorValues()
 
 }
 
-
 Rook::Rook(int in_row, int in_col, Color in_color) : Piece (in_row, in_col, in_color)
 {
     firstMove = true;
-    directions = {make_pair(1, 0), make_pair(-1, 0), make_pair(0, 1), make_pair(0, -1)};
+    std::cout << "Inside ROok constructor: " << &directions << std::endl;  
     AssignColorValues();
 }
+
+MOVES Rook::GetMoves() {return directions;}
 
 void Rook::Move(POS pos)
 {
@@ -187,13 +210,12 @@ void Rook::AssignColorValues()
     }
 }
 
-
 Bishop::Bishop(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
 {
-    directions = {make_pair(1, 1), make_pair(1, -1), make_pair(-1, 1), make_pair(-1, -1)};
     AssignColorValues();
 }
 
+MOVES Bishop::GetMoves() {return directions;}
 
 void Bishop::AssignColorValues()
 {
@@ -210,9 +232,11 @@ void Bishop::AssignColorValues()
 
 Queen::Queen(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
 {
-    directions = {make_pair(1, 1), make_pair(1, -1), make_pair(-1, 1), make_pair(-1, -1), make_pair(1, 0), make_pair(-1, 0), make_pair(0, 1), make_pair(0, -1)};
+    
     AssignColorValues();
 }
+
+MOVES Queen::GetMoves() {return directions;}
 
 void Queen::AssignColorValues()
 {
@@ -235,21 +259,21 @@ Knight::Knight(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, i
 MOVES Knight::ValidMoves(Board &board)
 {
     MOVES moves = {};
-    MOVES directions = {make_pair(2, 1), make_pair(2, -1), make_pair(-2, 1), make_pair(-2, -1), make_pair(1, 2), make_pair(1, -2), make_pair(-1, 2), make_pair(-1, -2)};
+    MOVES directions = {POS(2, 1), POS(2, -1), POS(-2, 1), POS(-2, -1), POS(1, 2), POS(1, -2), POS(-1, 2), POS(-1, -2)};
     for (POS dir : directions)
     {
         int r = row + dir.first;
         int c = col + dir.second;
-        if (board.CheckSquare(make_pair(r, c), color) == SquareState::EMPTY)
+        if (board.CheckSquare(POS(r, c), color) == SquareState::EMPTY)
         {
-            moves.push_back(make_pair(r, c));
+            moves.push_back(POS(r, c));
         }
-        else if (board.CheckSquare(make_pair(r, c), color) == SquareState::TAKEN_BY_ENEMY)
+        else if (board.CheckSquare(POS(r, c), color) == SquareState::TAKEN_BY_ENEMY)
         {
-            moves.push_back(make_pair(r, c));
+            moves.push_back(POS(r, c));
         }
     }
-    return moves;
+    return EliminateInvalidMoves(board, moves, GetPos());
 }
 
 void Knight::AssignColorValues()
@@ -279,21 +303,20 @@ void King::Move(POS pos)
     firstMove = false;
 }
 
-
 MOVES King::ValidMoves(Board &board)
 {
     MOVES moves = {};
-    MOVES directions = {make_pair(1, 1), make_pair(1, -1), make_pair(-1, 1), make_pair(-1, -1), make_pair(1, 0), make_pair(-1, 0), make_pair(0, 1), make_pair(0, -1)};
+    MOVES directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1), POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
     for (POS dir : directions)
     {
         int r = row + dir.first;
         int c = col + dir.second;
-        if (board.CheckSquare(make_pair(r, c), color) == SquareState::EMPTY || board.CheckSquare(make_pair(r, c), color) == SquareState::TAKEN_BY_ENEMY)
+        if (board.CheckSquare(POS(r, c), color) == SquareState::EMPTY || board.CheckSquare(POS(r, c), color) == SquareState::TAKEN_BY_ENEMY)
         {
-            moves.push_back(make_pair(r, c));
+            moves.push_back(POS(r, c));
         }
     }
-    return moves;
+    return EliminateInvalidMoves(board, moves, GetPos());
 }
 
 void King::AssignColorValues()

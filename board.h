@@ -19,11 +19,14 @@ class Board
 {
     public:
         Board();
+        ~Board();
         void CreateBoard();
         void PrintBoard();
         void Move(POS start, POS end);
         void NukeTile(POS pos);
         bool IsSquareChecked(POS pos, Color color);
+        bool IsMoveValid(POS start, POS end);
+        Piece* GetKing(Color color);
         SquareState CheckSquare(POS pos, Color color);
         Piece* GetPiece(POS pos);
 
