@@ -17,6 +17,7 @@ class Game
         //make board public?
         Board board; //so this initializes the board even before the constructor is called.
         Piece* selected;
+        POS selected_pos;
         MOVES valid_moves;
         MOVES highlighted_squares;
         bool running;

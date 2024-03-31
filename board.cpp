@@ -171,8 +171,8 @@ bool Board::IsSquareChecked(POS pos, Color color)
 
 bool Board::IsMoveValid(POS start, POS end)
 {
-    Board new_board = *this;
     return true;
+    Board new_board = *this;
     new_board.Move(start, end);
     Color KingColor = new_board.GetPiece(end)->GetColor();
     return false;
@@ -202,7 +202,11 @@ void Board::Move(POS start, POS end)
 {
     Piece* p = board[start.first][start.second];
     NukeTile(end); //If there is a piece at the end, nuke it
-    p->Move(end); //Move the piece
+    string name = p->GetName();
+    if (name == "King" || name == "Rook" || name == "Pawn")
+    {
+        p->FirstMove();   
+    }
     board[start.first][start.second] = nullptr; //Remove the piece from the start
     board[end.first][end.second] = p; //Place the piece at the end
 }
@@ -245,27 +249,27 @@ void Board::CreateBoard()
 {
     for (int i = 0; i < 8; i++)
     {   
-        board[1][i] = new Pawn(1, i, Color::BLACK);
-        board[6][i] = new Pawn(6, i, Color::WHITE);
+        board[1][i] = new Pawn(Color::BLACK);
+        board[6][i] = new Pawn(Color::WHITE);
     }
-    board[0][0] = new Rook(0, 0, Color::BLACK);
-    board[0][7] = new Rook(0, 7, Color::BLACK);
-    board[0][1] = new Knight(0, 1, Color::BLACK);
-    board[0][6] = new Knight(0, 6, Color::BLACK);
-    board[0][2] = new Bishop(0, 2, Color::BLACK);
-    board[0][5] = new Bishop(0, 5, Color::BLACK);
-    board[0][3] = new Queen(0, 3, Color::BLACK);
-    board[0][4] = new King(0, 4, Color::BLACK);
+    board[0][0] = new Rook(Color::BLACK);
+    board[0][7] = new Rook(Color::BLACK);
+    board[0][1] = new Knight(Color::BLACK);
+    board[0][6] = new Knight(Color::BLACK);
+    board[0][2] = new Bishop(Color::BLACK);
+    board[0][5] = new Bishop(Color::BLACK);
+    board[0][3] = new Queen(Color::BLACK);
+    board[0][4] = new King( Color::BLACK);
     blackKing = board[0][4];
 
-    board[7][0] = new Rook(7, 0, Color::WHITE);
-    board[7][7] = new Rook(7, 7, Color::WHITE);
-    board[7][1] = new Knight(7, 1, Color::WHITE);
-    board[7][6] = new Knight(7, 6, Color::WHITE);
-    board[7][2] = new Bishop(7, 2, Color::WHITE);
-    board[7][5] = new Bishop(7, 5, Color::WHITE);
-    board[7][3] = new Queen(7, 3, Color::WHITE);
-    board[7][4] = new King(7, 4, Color::WHITE);
+    board[7][0] = new Rook(Color::WHITE);
+    board[7][7] = new Rook(Color::WHITE);
+    board[7][1] = new Knight(Color::WHITE);
+    board[7][6] = new Knight(Color::WHITE);
+    board[7][2] = new Bishop(Color::WHITE);
+    board[7][5] = new Bishop(Color::WHITE);
+    board[7][3] = new Queen(Color::WHITE);
+    board[7][4] = new King(Color::WHITE);
     whiteKing = board[7][4];
 }
 

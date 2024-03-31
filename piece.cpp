@@ -10,18 +10,9 @@ const MOVES Rook::directions = {POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
 const MOVES Bishop::directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1)};
 const MOVES Queen::directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1), POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
 
-Piece::Piece(int in_row, int in_col, Color in_color)
+Piece::Piece(Color in_color)
 {
-    row = in_row;
-    col = in_col;
     color = in_color;
-    //cout << "piece directions: " << &directions << endl;
-}
-
-void Piece::Move(POS pos)
-{
-    row = pos.first;
-    col = pos.second;
 }
 
 MOVES Piece::EliminateInvalidMoves(Board &board, MOVES moves, POS pos)
@@ -39,15 +30,15 @@ MOVES Piece::EliminateInvalidMoves(Board &board, MOVES moves, POS pos)
 
 //FIXME add middle class for shared valid moves
 MOVES Piece::GetMoves(){}
+void Piece::FirstMove(){}
 
-MOVES Piece::ValidMoves(Board &board)
+MOVES Piece::ValidMoves(Board &board, POS pos)
 {
-    //std::cout << "shared valid mvoes" << std::endl;
+    int row = pos.first;
+    int col = pos.second;
     MOVES moves = {};
-    //std::cout << "Inside Shared Valid_MOves" << &directions << std::endl;
     for (POS dir : GetMoves())
     {
-        //std::cout <<"we got here" << endl;
         int r = row + dir.first;
         int c = col + dir.second;
         while (r >= 0 && r < 8 && c >= 0 && c < 8)
@@ -69,12 +60,7 @@ MOVES Piece::ValidMoves(Board &board)
             c += dir.second;
         }
     }
-    return EliminateInvalidMoves(board, moves, GetPos());
-}
-
-POS Piece::GetPos()
-{
-    return POS(row, col);
+    return EliminateInvalidMoves(board, moves, pos);
 }
 
 Color Piece::GetColor()
@@ -93,7 +79,7 @@ string Piece::Info()
     string color_name = "";
     if (color == Color::WHITE) {color_name = "White";}
     else {color_name = "Black";}
-    return "<" + color_name + " " + GetName() + " at: " + std::to_string(row) + ", " + std::to_string(col) + ">";
+    return "<" + color_name + " " + GetName() + ">"; //+ std::to_string(row) + ", " + std::to_string(col) + ">";
 }
 
 string Piece::GetPath()
@@ -107,21 +93,23 @@ Piece::~Piece()
 }
 
 
-Pawn::Pawn(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
+Pawn::Pawn(Color in_color) : Piece(in_color)
 {
     firstMove = true;
     AssignColorValues();
 }
 
-void Pawn::Move(POS pos)
+
+void Pawn::FirstMove()
 {
-    row = pos.first;
-    col = pos.second;
     firstMove = false;
+
 }
 
-MOVES Pawn::ValidMoves(Board &board)
+MOVES Pawn::ValidMoves(Board &board, POS pos)
 {   
+    int row = pos.first;
+    int col = pos.second;
     MOVES moves = {};
     switch (color)
     {
@@ -162,7 +150,7 @@ MOVES Pawn::ValidMoves(Board &board)
             }
             break;
     }
-    return EliminateInvalidMoves(board, moves, GetPos());
+    return EliminateInvalidMoves(board, moves, pos);
 }
 
 
@@ -180,21 +168,20 @@ void Pawn::AssignColorValues()
 
 }
 
-Rook::Rook(int in_row, int in_col, Color in_color) : Piece (in_row, in_col, in_color)
+Rook::Rook(Color in_color) : Piece (in_color)
 {
     firstMove = true;
-    std::cout << "Inside ROok constructor: " << &directions << std::endl;  
     AssignColorValues();
 }
 
-MOVES Rook::GetMoves() {return directions;}
 
-void Rook::Move(POS pos)
+void Rook::FirstMove()
 {
-    row = pos.first;
-    col = pos.second;
     firstMove = false;
 }
+
+
+MOVES Rook::GetMoves() {return directions;}
 
 
 void Rook::AssignColorValues()
@@ -210,7 +197,7 @@ void Rook::AssignColorValues()
     }
 }
 
-Bishop::Bishop(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
+Bishop::Bishop(Color in_color) : Piece(in_color)
 {
     AssignColorValues();
 }
@@ -230,7 +217,7 @@ void Bishop::AssignColorValues()
     }
 }
 
-Queen::Queen(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
+Queen::Queen(Color in_color) : Piece(in_color)
 {
     
     AssignColorValues();
@@ -251,13 +238,15 @@ void Queen::AssignColorValues()
     }
 }
 
-Knight::Knight(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
+Knight::Knight(Color in_color) : Piece(in_color)
 {
     AssignColorValues();
 }
 
-MOVES Knight::ValidMoves(Board &board)
+MOVES Knight::ValidMoves(Board &board, POS pos)
 {
+    int row = pos.first;
+    int col = pos.second;
     MOVES moves = {};
     MOVES directions = {POS(2, 1), POS(2, -1), POS(-2, 1), POS(-2, -1), POS(1, 2), POS(1, -2), POS(-1, 2), POS(-1, -2)};
     for (POS dir : directions)
@@ -273,7 +262,7 @@ MOVES Knight::ValidMoves(Board &board)
             moves.push_back(POS(r, c));
         }
     }
-    return EliminateInvalidMoves(board, moves, GetPos());
+    return EliminateInvalidMoves(board, moves, pos);
 }
 
 void Knight::AssignColorValues()
@@ -290,21 +279,21 @@ void Knight::AssignColorValues()
 }
 
 
-King::King(int in_row, int in_col, Color in_color) : Piece(in_row, in_col, in_color)
+King::King(Color in_color) : Piece(in_color)
 {
     firstMove = true;
     AssignColorValues();
 }
 
-void King::Move(POS pos)
+void King::FirstMove()
 {
-    row = pos.first;
-    col = pos.second;
     firstMove = false;
 }
 
-MOVES King::ValidMoves(Board &board)
+MOVES King::ValidMoves(Board &board, POS pos)
 {
+    int row = pos.first;void FirstMove();
+    int col = pos.second;
     MOVES moves = {};
     MOVES directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1), POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
     for (POS dir : directions)
@@ -316,7 +305,7 @@ MOVES King::ValidMoves(Board &board)
             moves.push_back(POS(r, c));
         }
     }
-    return EliminateInvalidMoves(board, moves, GetPos());
+    return EliminateInvalidMoves(board, moves, pos);
 }
 
 void King::AssignColorValues()
