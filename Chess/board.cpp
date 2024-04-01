@@ -9,7 +9,7 @@ Board::Board()
     board = {};
     enPassant = POS(-1,-1);
     CreateBoard();
-    PrintBoard();
+    //PrintBoard();
 }
 
 Board::Board(const Board &b)

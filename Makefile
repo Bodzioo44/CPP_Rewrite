@@ -17,7 +17,7 @@ CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
+INCPATH       = -I. -I. -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -144,9 +144,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CPP_Rewrite.pro Chess/piece.h \
 		Chess/board.h \
 		Chess/game.h \
-		QtDesigner.h \
-		GameWidget.h \
-		MainWindow.h Chess/piece.cpp \
+		Qt/QtDesigner.h \
+		Qt/GameWidget.h \
+		Qt/MainWindow.h Chess/piece.cpp \
 		Chess/board.cpp \
 		Chess/game.cpp \
 		main.cpp
@@ -158,7 +158,7 @@ TARGET        = CPP_Rewrite
 first: all
 ####### Build rules
 
-CPP_Rewrite: ui_QtDesigner.h $(OBJECTS)  
+CPP_Rewrite:  $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: CPP_Rewrite.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -341,9 +341,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents Chess/piece.h Chess/board.h Chess/game.h QtDesigner.h GameWidget.h MainWindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents Chess/piece.h Chess/board.h Chess/game.h Qt/QtDesigner.h Qt/GameWidget.h Qt/MainWindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents Chess/piece.cpp Chess/board.cpp Chess/game.cpp main.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents QtDesigner.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -381,20 +380,15 @@ compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_QtDesigner.h
+compiler_uic_make_all:
 compiler_uic_clean:
-	-$(DEL_FILE) ui_QtDesigner.h
-ui_QtDesigner.h: QtDesigner.ui \
-		/usr/lib/qt5/bin/uic
-	/usr/lib/qt5/bin/uic QtDesigner.ui -o ui_QtDesigner.h
-
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean compiler_uic_clean 
+compiler_clean: compiler_moc_predefs_clean 
 
 ####### Compile
 
@@ -411,11 +405,11 @@ game.o: Chess/game.cpp Chess/game.h \
 		Chess/piece.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o game.o Chess/game.cpp
 
-main.o: main.cpp ui_QtDesigner.h \
-		MainWindow.cpp \
-		MainWindow.h \
-		GameWidget.cpp \
-		GameWidget.h \
+main.o: main.cpp Qt/ui_QtDesigner.h \
+		Qt/MainWindow.cpp \
+		Qt/MainWindow.h \
+		Qt/GameWidget.cpp \
+		Qt/GameWidget.h \
 		Chess/game.h \
 		Chess/board.h \
 		Chess/piece.h

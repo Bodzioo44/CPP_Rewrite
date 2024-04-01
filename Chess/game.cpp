@@ -49,7 +49,14 @@ void Game::Select(POS pos)
             selected_pos = pos;
             cout << "Selected: " << selected->Info() << endl;
             valid_moves = selected->ValidMoves(board, selected_pos);
-            cout << "Valid moves: " << endl;
+
+            cout << "Valid moves: ";
+            for (POS move : valid_moves)
+            {
+                cout << "(" <<move.first << ", " << move.second << ") ";
+            }
+            cout << endl;
+
             if (valid_moves.size() != 0)
             {
                 highlighted_squares = valid_moves;
@@ -71,7 +78,7 @@ void Game::Select(POS pos)
     {
         if (find(valid_moves.begin(), valid_moves.end(), pos) != valid_moves.end())
         {
-            cout << "Moving: " << selected->Info() << " to " << row << ", " << col << endl;
+            cout << "Moving: " << selected->Info() << " to: " << row << ", " << col << endl;
             board.Move(selected_pos, pos);
             highlighted_squares.clear();
             //call update?

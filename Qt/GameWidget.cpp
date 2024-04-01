@@ -1,4 +1,4 @@
-#include "GameWidget.h"
+#include "Qt/GameWidget.h"
 #include <QImage>
 
 #include <iostream>
@@ -24,7 +24,7 @@ void GameWidget::mousePressEvent(QMouseEvent* event)
     int col = x / square_size;
     if (row >= 0 && row < 8 && col >= 0 && col < 8)
     {
-        cout << "Clicked on " << row << ", " << col << endl;
+        //cout << "Clicked on " << row << ", " << col << endl;
         game.Select(make_pair(row, col));
         update();
     }

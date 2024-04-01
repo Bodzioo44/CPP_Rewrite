@@ -1,5 +1,8 @@
-#include "ui_QtDesigner.h"
-#include "GameWidget.cpp"
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include "Qt/ui_QtDesigner.h"
+#include "Qt/GameWidget.cpp"
 #include <QMainWindow>
 #include <QObject>
 
@@ -18,3 +21,6 @@ private:
     void Join_Lobby_Button_Action();
     void Update_Lobby_List_Button_Action();
 };
+
+
+#endif

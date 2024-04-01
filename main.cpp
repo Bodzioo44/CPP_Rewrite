@@ -3,8 +3,8 @@
 #include <QApplication>
 #include <QPushButton>
 
-#include "ui_QtDesigner.h"
-#include "MainWindow.cpp"
+#include "Qt/ui_QtDesigner.h"
+#include "Qt/MainWindow.cpp"
 using namespace std;
 
 

@@ -1,8 +1,6 @@
 main.sh
 .vscode
-compile.sh
 *.o
 aloo.sh
 .qmake.stash
 Makefile
-*.pro
