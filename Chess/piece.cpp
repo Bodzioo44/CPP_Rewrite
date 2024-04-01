@@ -1,5 +1,5 @@
-#include "piece.h"
-#include "board.h"
+#include "Chess/piece.h"
+#include "Chess/board.h"
 #include <iostream>
 #include <utility>
 #include <vector>

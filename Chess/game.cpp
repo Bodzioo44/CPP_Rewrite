@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "game.h"
+#include "Chess/game.h"
 #include <iostream>
 using namespace std;
 

@@ -52,14 +52,14 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = board.cpp \
-		main.cpp \
-		piece.cpp \
-		game.cpp 
-OBJECTS       = board.o \
-		main.o \
-		piece.o \
-		game.o
+SOURCES       = Chess/piece.cpp \
+		Chess/board.cpp \
+		Chess/game.cpp \
+		main.cpp 
+OBJECTS       = piece.o \
+		board.o \
+		game.o \
+		main.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -141,15 +141,15 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		CPP_Rewrite.pro board.h \
-		piece.h \
+		CPP_Rewrite.pro Chess/piece.h \
+		Chess/board.h \
+		Chess/game.h \
 		QtDesigner.h \
-		game.h \
 		GameWidget.h \
-		MainWindow.h board.cpp \
-		main.cpp \
-		piece.cpp \
-		game.cpp
+		MainWindow.h Chess/piece.cpp \
+		Chess/board.cpp \
+		Chess/game.cpp \
+		main.cpp
 QMAKE_TARGET  = CPP_Rewrite
 DESTDIR       = 
 TARGET        = CPP_Rewrite
@@ -341,8 +341,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents board.h piece.h QtDesigner.h game.h GameWidget.h MainWindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents board.cpp main.cpp piece.cpp game.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Chess/piece.h Chess/board.h Chess/game.h QtDesigner.h GameWidget.h MainWindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents Chess/piece.cpp Chess/board.cpp Chess/game.cpp main.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents QtDesigner.ui $(DISTDIR)/
 
 
@@ -398,28 +398,28 @@ compiler_clean: compiler_moc_predefs_clean compiler_uic_clean
 
 ####### Compile
 
-board.o: board.cpp board.h \
-		piece.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o board.o board.cpp
+piece.o: Chess/piece.cpp Chess/piece.h \
+		Chess/board.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o piece.o Chess/piece.cpp
 
-main.o: main.cpp board.h \
-		piece.h \
-		QtDesigner.h \
+board.o: Chess/board.cpp Chess/board.h \
+		Chess/piece.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o board.o Chess/board.cpp
+
+game.o: Chess/game.cpp Chess/game.h \
+		Chess/board.h \
+		Chess/piece.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o game.o Chess/game.cpp
+
+main.o: main.cpp ui_QtDesigner.h \
 		MainWindow.cpp \
 		MainWindow.h \
 		GameWidget.cpp \
 		GameWidget.h \
-		game.h
+		Chess/game.h \
+		Chess/board.h \
+		Chess/piece.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
-
-piece.o: piece.cpp piece.h \
-		board.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o piece.o piece.cpp
-
-game.o: game.cpp game.h \
-		board.h \
-		piece.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o game.o game.cpp
 
 ####### Install
 

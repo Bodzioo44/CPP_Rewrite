@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QPainter>
 #include <QMouseEvent>
-#include "game.h"
+#include "Chess/game.h"
 
 enum class GameType
 {

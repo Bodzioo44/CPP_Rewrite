@@ -1,10 +1,9 @@
 #include <iostream>
-#include "board.h"
 #include <QString>
 #include <QApplication>
 #include <QPushButton>
 
-#include "QtDesigner.h"
+#include "ui_QtDesigner.h"
 #include "MainWindow.cpp"
 using namespace std;
 

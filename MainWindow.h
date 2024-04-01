@@ -1,4 +1,4 @@
-#include "QtDesigner.h"
+#include "ui_QtDesigner.h"
 #include "GameWidget.cpp"
 #include <QMainWindow>
 #include <QObject>

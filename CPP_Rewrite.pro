@@ -14,7 +14,7 @@ INCLUDEPATH += .
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += board.h piece.h QtDesigner.h game.h GameWidget.h MainWindow.h
+HEADERS += Chess/piece.h Chess/board.h Chess/game.h QtDesigner.h GameWidget.h MainWindow.h
 FORMS += QtDesigner.ui
-SOURCES += board.cpp main.cpp piece.cpp MainWindow.cpp GameWidget.cpp game.cpp
+SOURCES += Chess/piece.cpp Chess/board.cpp Chess/game.cpp main.cpp MainWindow.cpp GameWidget.cpp
 QT += core gui widgets

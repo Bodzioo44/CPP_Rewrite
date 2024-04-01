@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "piece.h"
+#include "Chess/piece.h"
 #include <array>
 
 const int BOARD_SIZE =  8;
