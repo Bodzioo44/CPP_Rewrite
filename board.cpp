@@ -246,14 +246,12 @@ void Board::Move(POS start, POS end)
             UpdateKingPOS(end);
         }
         p->FirstMove();
-        cout << "en passant set to -1, -1" << endl;
         enPassant = POS(-1,-1);
     }
     else if (p->GetName() == "Pawn") //Pawn special actions
     {
         if (abs(start.first - end.first) == 2) //if pawn moved by 2 squares forward, set en passant position
         {
-            cout << "En passant set to" << end.first << ", " << end.second << endl;
             enPassant = end;
             p->FirstMove();
             board[end.first][end.second] = p;

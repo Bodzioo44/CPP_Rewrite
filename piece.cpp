@@ -23,9 +23,9 @@ Piece::Piece(Color in_color)
 {
     color = in_color;
 }
-Piece::Piece(const Piece &p): color(p.color), path(p.path){}
+Piece::Piece(const Piece &p): color(p.color), path(p.path) {}
 
-MOVES Piece::EliminateInvalidMoves(Board &board, MOVES moves, POS pos)
+MOVES Piece::EliminateInvalidMoves(Board &board, MOVES moves, POS pos) const
 {
     MOVES valid_moves = {};
     for (POS move : moves)
@@ -39,7 +39,7 @@ MOVES Piece::EliminateInvalidMoves(Board &board, MOVES moves, POS pos)
 }
 
 // What to do with these?
-MOVES Piece::GetMoves(){}
+MOVES Piece::GetDirections(){}
 void Piece::FirstMove(){}
 
 MOVES Piece::ValidMoves(Board &board, POS pos)
@@ -47,7 +47,7 @@ MOVES Piece::ValidMoves(Board &board, POS pos)
     int row = pos.first;
     int col = pos.second;
     MOVES moves = {};
-    for (POS dir : GetMoves())
+    for (POS dir : GetDirections())
     {
         int r = row + dir.first;
         int c = col + dir.second;
@@ -73,18 +73,18 @@ MOVES Piece::ValidMoves(Board &board, POS pos)
     return EliminateInvalidMoves(board, moves, pos);
 }
 
-Color Piece::GetColor()
+Color Piece::GetColor() const
 {
     return color;
 }
-string Piece::GetName()
+string Piece::GetName() const
 {
     string name = typeid(*this).name();
     name = name.substr(1);
     return name;
 }
 
-string Piece::Info()
+string Piece::Info() const
 {
     string color_name = "";
     if (color == Color::WHITE) {color_name = "White";}
@@ -92,7 +92,7 @@ string Piece::Info()
     return "<" + color_name + " " + GetName() + ">"; //+ std::to_string(row) + ", " + std::to_string(col) + ">";
 }
 
-string Piece::GetPath()
+string Piece::GetPath() const
 {
     return path;
 }
@@ -232,10 +232,10 @@ Rook* Rook::Clone()
 }
 
 
-MOVES Rook::GetMoves() {return directions;}
+MOVES Rook::GetDirections() {return directions;}
 
 
-bool Rook::IsFirstMove()
+bool Rook::IsFirstMove() const
 {
     return firstMove;
 }
@@ -265,7 +265,7 @@ Bishop* Bishop::Clone()
     return new Bishop(*this);
 }
 
-MOVES Bishop::GetMoves() {return directions;}
+MOVES Bishop::GetDirections() {return directions;}
 
 void Bishop::AssignColorValues()
 {
@@ -294,7 +294,7 @@ Queen* Queen::Clone()
 }
 
 
-MOVES Queen::GetMoves() {return directions;}
+MOVES Queen::GetDirections() {return directions;}
 
 void Queen::AssignColorValues()
 {
@@ -309,17 +309,9 @@ void Queen::AssignColorValues()
     }
 }
 
-Knight::Knight(Color in_color) : Piece(in_color)
-{
-    AssignColorValues();
-}
+Knight::Knight(Color in_color) : Piece(in_color) {AssignColorValues();}
 Knight::Knight(const Knight &k) : Piece(k){}
-
-Knight* Knight::Clone()
-{
-    return new Knight(*this);
-}
-
+Knight* Knight::Clone() {return new Knight(*this);}
 
 MOVES Knight::ValidMoves(Board &board, POS pos)
 {
@@ -356,18 +348,14 @@ void Knight::AssignColorValues()
     }
 }
 
-
 King::King(Color in_color) : Piece(in_color)
 {
     firstMove = true;
     AssignColorValues();
 }
-King::King(const King &p) : Piece(p), firstMove(p.firstMove){}
 
-King* King::Clone()
-{
-    return new King(*this);
-}
+King::King(const King &p) : Piece(p), firstMove(p.firstMove){}
+King* King::Clone() {return new King(*this);}
 
 
 void King::FirstMove()
@@ -390,7 +378,6 @@ MOVES King::ValidMoves(Board &board, POS pos)
             moves.push_back(POS(r, c));
         }
     }
-
     if (firstMove)
     {
         if (board.CheckSquare(POS(row, col + 1), color) == SquareState::EMPTY && board.CheckSquare(POS(row, col + 2), color) == SquareState::EMPTY)
@@ -423,10 +410,8 @@ MOVES King::ValidMoves(Board &board, POS pos)
                         loop = false;
                         break;
                     }
-                    
                 }
                 if (loop) {moves.push_back(POS(row, 0));}
-                
             }
         }
     }

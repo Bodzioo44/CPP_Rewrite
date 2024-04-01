@@ -20,21 +20,26 @@ public:
     Piece(Color in_color);
     Piece(const Piece &piece);
     virtual ~Piece();
-    virtual Piece* Clone() = 0;
-    virtual MOVES ValidMoves(Board &board, POS pos);
-    virtual MOVES GetMoves();
-    virtual void AssignColorValues() = 0;
-    virtual void FirstMove();
-    MOVES EliminateInvalidMoves(Board &board, MOVES moves, POS pos);
-    string GetName();
-    Color GetColor();
-    string GetPath();
-    string Info();
-protected:
-    Color color;
-    string path;
-    const static MOVES directions;
 
+    virtual Piece* Clone() = 0; //Deep copies the piece, and returns the pointer to it
+    virtual MOVES ValidMoves(Board &board, POS pos); //Returns the valid moves of the piece (using board methods)
+
+    virtual void FirstMove(); //Sets piece's bool firstMove to false (used by pawn, rook, king)
+    
+    string GetName() const; //Returns the name of the piece
+    Color GetColor() const; //Returns the color of the piece
+    string GetPath() const; //Returns the path to the image of the piece
+    string Info() const; //Returns the name of the piece and its color (for debugging)
+protected:
+    virtual MOVES GetDirections(); //Returns directions in which the piece can move (used by bishop, rook, queen) 
+    //since ValidMoves is non pure virtual method, it would reach to base direction attribute instead of derived class's direction attribute?
+    //thats why separate GetDirections method is used?
+
+    MOVES EliminateInvalidMoves(Board &board, MOVES moves, POS pos) const; //Eliminates the moves that are invalid (using board methods)
+    virtual void AssignColorValues() = 0; //Assigns the color specific values to the piece
+    Color color; //Color of the piece
+    string path; //Path to the image of the piece
+    const static MOVES directions; //Directions in which pieces can move (used by bishop, rook, queen)
 };
 
 
@@ -49,8 +54,9 @@ public:
     MOVES ValidMoves(Board &board, POS pos) override;
     void FirstMove();
     bool IsFirstMove() const;
-    void AssignColorValues() override;
+    
 private:
+    void AssignColorValues() override;
     bool firstMove;
 };
 
@@ -61,13 +67,16 @@ class Rook : public Piece
         Rook(const Rook &r);
         ~Rook() override;
         Rook* Clone() override;
-        MOVES GetMoves() override;
+
+        bool IsFirstMove() const;
         void FirstMove();
-        bool IsFirstMove();
-        void AssignColorValues() override;
+
+
     private:
-        bool firstMove;
+        void AssignColorValues() override;
         const static MOVES directions;
+        MOVES GetDirections() override;
+        bool firstMove;
 
 };
 
@@ -79,6 +88,7 @@ class Knight : public Piece
         ~Knight() override;
         Knight* Clone() override;
         MOVES ValidMoves(Board &board, POS pos) override;
+    private:
         void AssignColorValues() override;
 };
 
@@ -89,10 +99,11 @@ class Bishop : public Piece
         Bishop(const Bishop &p);
         ~Bishop() override;
         Bishop* Clone() override;
-        MOVES GetMoves() override;
-        void AssignColorValues() override;
+
     private:
         const static MOVES directions;
+        void AssignColorValues() override;
+        MOVES GetDirections() override;
 };
 
 class Queen : public Piece
@@ -102,10 +113,11 @@ class Queen : public Piece
         Queen(const Queen &q);
         ~Queen() override;
         Queen* Clone() override;
-        MOVES GetMoves() override;
-        void AssignColorValues() override;
+
     private:
         const static MOVES directions;
+        MOVES GetDirections() override;
+        void AssignColorValues() override;
 };
 
 class King : public Piece
