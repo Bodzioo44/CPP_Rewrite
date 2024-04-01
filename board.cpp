@@ -7,6 +7,7 @@ Board::Board()
 {
     //cout << "Board created" << endl;
     board = {};
+    enPassant = POS(-1,-1);
     CreateBoard();
     PrintBoard();
 }
@@ -27,6 +28,8 @@ Board::Board(const Board &b)
     }
     whiteKing = b.whiteKing;
     blackKing = b.blackKing;
+    enPassant = b.enPassant;
+
 }
 
 Board::~Board()
@@ -212,51 +215,81 @@ POS Board::GetKingPOS(Color color) const
 void Board::Move(POS start, POS end)
 {
     Piece* p = board[start.first][start.second];
-    if (p->GetName() == "King" && abs(start.second - end.second) > 1)//Castling check
+    if (p->GetName() == "King" ) //King Moves
     {
-        if (start.second > end.second)//long castling
+        if (abs(start.second - end.second) > 1) //casting check
         {
-            board[start.first][start.second - 2] = board[start.first][start.second];
-            board[start.first][start.second] = nullptr;
-            UpdateKingPOS(POS(start.first, start.second - 2));
+            if (start.second > end.second)//long castling
+            {
+                board[start.first][start.second - 2] = board[start.first][start.second];
+                board[start.first][start.second] = nullptr;
+                UpdateKingPOS(POS(start.first, start.second - 2));
 
-            board[start.first][start.second - 1] = board[end.first][end.second];
-            board[end.first][end.second] = nullptr;
-            
+                board[start.first][start.second - 1] = board[end.first][end.second];
+                board[end.first][end.second] = nullptr;
+            }
+            else//short castling
+            {
+                board[start.first][start.second + 2] = board[start.first][start.second];
+                board[start.first][start.second] = nullptr;
+                UpdateKingPOS(POS(start.first, start.second + 2));
+
+                board[start.first][start.second + 1] = board[end.first][end.second];
+                board[end.first][end.second] = nullptr;
+            }
         }
-        else//short castling
+        else //normal king moves
         {
-            board[start.first][start.second + 2] = board[start.first][start.second];
+            NukeTile(end);
+            board[end.first][end.second] = p;
             board[start.first][start.second] = nullptr;
-            UpdateKingPOS(POS(start.first, start.second + 2));
-
-            board[start.first][start.second + 1] = board[end.first][end.second];
-            board[end.first][end.second] = nullptr;
+            UpdateKingPOS(end);
         }
         p->FirstMove();
+        cout << "en passant set to -1, -1" << endl;
+        enPassant = POS(-1,-1);
     }
-    else if (!true) {}
-    else
+    else if (p->GetName() == "Pawn") //Pawn special actions
     {
-        NukeTile(end); //If there is a piece at the end, delete it
-        string name = p->GetName();
-        if (name == "King" || name == "Rook" || name == "Pawn")
+        if (abs(start.first - end.first) == 2) //if pawn moved by 2 squares forward, set en passant position
         {
-            p->FirstMove();   
+            cout << "En passant set to" << end.first << ", " << end.second << endl;
+            enPassant = end;
+            p->FirstMove();
+            board[end.first][end.second] = p;
+            board[start.first][start.second] = nullptr;
         }
-        if (name == "King")
-        {
-            if (p->GetColor() == Color::WHITE)
+        else //all other pawn moves
+        {   
+            if (POS(end.first-1, end.second) == GetEnPassant()) //en passant check for blac
             {
-                whiteKing = end;
+                NukeTile(POS(end.first - 1, end.second));
+            }
+            else if (POS(end.first+1, end.second) == GetEnPassant()) //en passant check for white
+            {
+                NukeTile(POS(end.first + 1, end.second));
             }
             else
             {
-                blackKing = end;
+                NukeTile(end);
             }
+            board[end.first][end.second] = p;
+            board[start.first][start.second] = nullptr;
+            p->FirstMove();
+            enPassant = POS(-1,-1);
+        }
+    }
+    else //all other moves
+    {
+        NukeTile(end); //If there is a piece at the end, delete it
+        string name = p->GetName();
+        if (name == "Rook")
+        {
+            p->FirstMove();   
         }
         board[start.first][start.second] = nullptr; //Remove the piece from the start
         board[end.first][end.second] = p; //Place the piece at the end
+        enPassant = POS(-1,-1);
     }
     
 }
@@ -306,6 +339,11 @@ SquareState Board::CheckSquare(POS pos, Color color) const
         //Should never reach here, compiler is crying
         return SquareState::INVALID;
     }
+}
+
+POS Board::GetEnPassant() const
+{
+    return enPassant;
 }
 
 void Board::CreateBoard()

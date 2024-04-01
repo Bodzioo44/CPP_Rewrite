@@ -14,7 +14,6 @@ using MOVES = vector<POS>;
 
 enum class Color {WHITE, BLACK};
 
-
 class Piece
 {
 public: 
@@ -45,9 +44,11 @@ public:
     Pawn(Color in_color);
     Pawn(const Pawn &p);
     ~Pawn() override;
+
     Pawn* Clone() override;
     MOVES ValidMoves(Board &board, POS pos) override;
     void FirstMove();
+    bool IsFirstMove() const;
     void AssignColorValues() override;
 private:
     bool firstMove;
@@ -67,6 +68,7 @@ class Rook : public Piece
     private:
         bool firstMove;
         const static MOVES directions;
+
 };
 
 class Knight : public Piece

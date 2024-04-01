@@ -10,7 +10,6 @@ const MOVES Rook::directions = {POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
 const MOVES Bishop::directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1)};
 const MOVES Queen::directions = {POS(1, 1), POS(1, -1), POS(-1, 1), POS(-1, -1), POS(1, 0), POS(-1, 0), POS(0, 1), POS(0, -1)};
 
-
 //Are these needed?
 Piece::~Piece(){}
 Pawn::~Pawn(){}
@@ -112,7 +111,6 @@ Pawn::Pawn(const Pawn &p) : Piece(p), firstMove(p.firstMove){}
 void Pawn::FirstMove()
 {
     firstMove = false;
-
 }
 
 Pawn* Pawn::Clone()
@@ -128,6 +126,7 @@ MOVES Pawn::ValidMoves(Board &board, POS pos)
     switch (color)
     {
         case Color::BLACK:
+            //forward
             if (board.CheckSquare(POS(row + 1, col), color) == SquareState::EMPTY)
             {
                 moves.push_back(POS(row + 1, col));
@@ -136,6 +135,7 @@ MOVES Pawn::ValidMoves(Board &board, POS pos)
                     moves.push_back(POS(row + 2, col));
                 }
             }
+            //diagonal
             if (board.CheckSquare(POS(row + 1, col + 1), color) == SquareState::TAKEN_BY_ENEMY)
             {
                 moves.push_back(POS(row + 1, col + 1));
@@ -144,8 +144,21 @@ MOVES Pawn::ValidMoves(Board &board, POS pos)
             {
                 moves.push_back(POS(row + 1, col - 1));
             }
+            //en passant
+            if (board.GetEnPassant() == POS(row, col + 1))
+            {
+                moves.push_back(POS(row + 1, col + 1));
+            }
+
+            if (board.GetEnPassant() == POS(row, col - 1))
+            {
+                moves.push_back(POS(row + 1, col - 1));
+            }
+
+
             break;
         case Color::WHITE:
+            // forward
             if (board.CheckSquare(POS(row - 1, col), color) == SquareState::EMPTY)
             {
                 moves.push_back(POS(row - 1, col));
@@ -154,6 +167,7 @@ MOVES Pawn::ValidMoves(Board &board, POS pos)
                     moves.push_back(POS(row - 2, col));
                 }
             }
+            //diagonal
             if (board.CheckSquare(POS(row - 1, col + 1), color) == SquareState::TAKEN_BY_ENEMY)
             {
                 moves.push_back(POS(row - 1, col + 1));
@@ -162,11 +176,27 @@ MOVES Pawn::ValidMoves(Board &board, POS pos)
             {
                 moves.push_back(POS(row - 1, col - 1));
             }
+            //en passant
+            if (board.GetEnPassant() == POS(row, col + 1))
+            {
+                moves.push_back(POS(row - 1, col + 1));
+            }
+
+            if (board.GetEnPassant() == POS(row, col - 1))
+            {
+                moves.push_back(POS(row - 1, col - 1));
+            }
             break;
     }
     return EliminateInvalidMoves(board, moves, pos);
 }
 
+
+
+bool Pawn::IsFirstMove() const
+{
+    return firstMove;
+}
 
 void Pawn::AssignColorValues()
 {
