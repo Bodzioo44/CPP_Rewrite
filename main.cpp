@@ -1,14 +1,9 @@
-#include <iostream>
-#include <QString>
 #include <QApplication>
-#include <QPushButton>
-
-#include "Qt/ui_QtDesigner.h"
 #include "Qt/MainWindow.cpp"
+
+#include <iostream>
 using namespace std;
 
-
-#include <QImage>
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +17,7 @@ int main(int argc, char *argv[])
     return app.exec();
 
 
-    
+
+
     return 0;
 }
