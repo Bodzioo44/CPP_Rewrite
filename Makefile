@@ -55,11 +55,13 @@ OBJECTS_DIR   = ./
 SOURCES       = Chess/piece.cpp \
 		Chess/board.cpp \
 		Chess/game.cpp \
-		main.cpp 
+		main.cpp \
+		Client.cpp 
 OBJECTS       = piece.o \
 		board.o \
 		game.o \
-		main.o
+		main.o \
+		Client.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -146,10 +148,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		Chess/game.h \
 		Qt/QtDesigner.h \
 		Qt/GameWidget.h \
-		Qt/MainWindow.h Chess/piece.cpp \
+		Qt/MainWindow.h \
+		Client.h Chess/piece.cpp \
 		Chess/board.cpp \
 		Chess/game.cpp \
-		main.cpp
+		main.cpp \
+		Client.cpp
 QMAKE_TARGET  = CPP_Rewrite
 DESTDIR       = 
 TARGET        = CPP_Rewrite
@@ -341,8 +345,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents Chess/piece.h Chess/board.h Chess/game.h Qt/QtDesigner.h Qt/GameWidget.h Qt/MainWindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents Chess/piece.cpp Chess/board.cpp Chess/game.cpp main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Chess/piece.h Chess/board.h Chess/game.h Qt/QtDesigner.h Qt/GameWidget.h Qt/MainWindow.h Client.h $(DISTDIR)/
+	$(COPY_FILE) --parents Chess/piece.cpp Chess/board.cpp Chess/game.cpp main.cpp Client.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -405,15 +409,19 @@ game.o: Chess/game.cpp Chess/game.h \
 		Chess/piece.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o game.o Chess/game.cpp
 
-main.o: main.cpp Qt/ui_QtDesigner.h \
-		Qt/MainWindow.cpp \
+main.o: main.cpp Qt/MainWindow.cpp \
 		Qt/MainWindow.h \
+		Qt/ui_QtDesigner.h \
 		Qt/GameWidget.cpp \
 		Qt/GameWidget.h \
 		Chess/game.h \
 		Chess/board.h \
-		Chess/piece.h
+		Chess/piece.h \
+		Client.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+Client.o: Client.cpp Client.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Client.o Client.cpp
 
 ####### Install
 
