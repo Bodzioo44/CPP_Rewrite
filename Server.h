@@ -8,11 +8,14 @@
 
 
 #include <vector>
+#include <map>
+#include <algorithm>
+
 #include <iostream>
 using namespace std;
 
 const int PORT = 4444;
-timeval timeout = {3, 0};
+timeval timeout = {5, 0};
 
 
 class Server
@@ -24,12 +27,15 @@ private:
     void Listening();
     void CreateSocket();
     void HandleMessage(int clientSocket);
+    void Send(int clients, string message);
     void AssignClient();
+    void DisconnectClient(int clientSocket);
 
-    int sock; //server socket
+    int serverSocket; //server socket
     bool running;
-    sockaddr_in addr; //server addr
-    vector<int> clients;
+    sockaddr_in serverAddress; //server addr
+    vector<int> clients; //fds 
+    map<string, int> clientsMap; //client name/fd map?
 
 
 };

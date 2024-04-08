@@ -1,117 +1,123 @@
 #include "Server.h"
 
+
 Server::Server()
 {
+    clients = {};
     running = true;
+
     CreateSocket();
     Listening();
 }
 
 void Server::CreateSocket()
 {
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(PORT);
-    //addr.sin_addr.s_addr = htonl(inet_addr("127.0.0.1"));
-    if(inet_pton(AF_INET, "127.0.0.1", &addr.sin_addr)<=0)  
-    {
-    std::cout << "\nInvalid address/ Address not supported \n";
-    return;
-    }
-    bind(sock, (struct sockaddr*) &addr, sizeof(addr));
+    serverSocket = socket(AF_INET, SOCK_STREAM, 0); 
+    serverAddress.sin_family = AF_INET; 
+    serverAddress.sin_port = htons(PORT); 
+    serverAddress.sin_addr.s_addr = INADDR_ANY; 
+    bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)); 
 }
-
 
 void Server::Listening()
 {
-    listen(sock, SOMAXCONN);
+    listen(serverSocket, SOMAXCONN); 
     while (running)
     {
-        //fd_set has to be reset every time select is called, to reset values
         fd_set readfds;
         FD_ZERO(&readfds);
-        //FD_SETSIZE(sock, &readfds)
-        FD_SET(sock, &readfds); 
-        //FD_SET(STDIN_FILENO, &readfds);
-
-        int max_sock_value = sock;
+        FD_SET(serverSocket, &readfds);
+        FD_SET(STDIN_FILENO, &readfds);
+        int max_sock_value = serverSocket;
+        if (STDIN_FILENO > max_sock_value)
+        {
+            max_sock_value = STDIN_FILENO;
+        }
         for (int clientSocket : clients)
         {
-            std::cout << "Client socket: " << clientSocket << endl;
             FD_SET(clientSocket, &readfds);
-            if (clientSocket > sock)
+            if (clientSocket > max_sock_value)
             {
                 max_sock_value = clientSocket;
             }
+            Send(clientSocket, "Hello, client!");
         }
-        //std::cout << "Size of fd" << sizeof(readfds) << endl;
         timeout.tv_sec = 3;
+        int activity = select(max_sock_value + 1, &readfds, nullptr, nullptr, &timeout);
 
-        std::cout << "readfds size: " << sizeof(readfds) << endl;
-        std::cout << "clients size: " << clients.size() << endl;
-        int activity = select(max_sock_value +1, &readfds, nullptr, nullptr, nullptr);
-        //select will change &readfds to show which sockets are ready to read
-        //activity will be the number of sockets that are ready to read
-        //0 means timeout
-        std::cout << "Activity: " << activity << endl;
         if (activity > 0)
         {
-            if (FD_ISSET(sock, &readfds))
+            if (FD_ISSET(serverSocket, &readfds))
             {
                 AssignClient();
             }
-            for (int clientSocket : clients)
-            {
-                if (FD_ISSET(clientSocket, &readfds))
-                {
-                    HandleMessage(clientSocket);
-                }
-            }
-            /*
-            if (FD_ISSET(STDIN_FILENO, &readfds))
+            else if (FD_ISSET(STDIN_FILENO, &readfds))
             {
                 string input;
-                std::getline(std::cin, input);
+                getline(cin, input);
                 if (input == "exit")
                 {
                     running = false;
                 }
+                cout << input << endl;
             }
-            */
+            else
+            {
+                for (int clientSocket : clients)
+                {
+                    if (FD_ISSET(clientSocket, &readfds))
+                    {    
+                        HandleMessage(clientSocket);
+                    }
+                }
+            }
         }
+
         else if (activity < 0)
         {
-            std::cout << "Error in select" << endl;
-            perror("socket error");
-            running = false;
+            cout << "Select error, something went wrong!" << endl;
+            perror("select");
         }
         else
         {
-            std::cout << "Timed out, waiting 3 sec..." << endl;
+            cout << "Timeout!" << endl;
         }
     }
+    close(serverSocket); 
 }
-
 
 void Server::AssignClient()
 {
-    sockaddr_in clientAddr;
-    socklen_t clientSize = sizeof(clientAddr);
-    int clientSocket = accept(sock, (struct sockaddr*) &clientAddr, &clientSize);
+    // TODO add error handling, store client addresses?
+    // sockaddr_in clientAddress;
+    // socklen_t clientSize = sizeof(clientAddress);
+    int clientSocket = accept(serverSocket, nullptr, nullptr);
+    cout << "Client connected with fd: " << clientSocket << endl;
     clients.push_back(clientSocket);
-    std::cout << "Client connected" << endl;
-    //HandleMessage(clientSocket);
 }
-
 
 void Server::HandleMessage(int clientSocket)
 {
-    char buffer[1024];
+    char buffer[1024] = { 0 };
     ssize_t numbytes = recv(clientSocket, buffer, sizeof(buffer), 0);
-    std::cout << "Message from client: " << buffer << endl;
-    close(clientSocket);
+    if (numbytes == 0) {DisconnectClient(clientSocket);}
+    else {std::cout << "Message from client: " << buffer << endl;}
 }
 
+void Server::DisconnectClient(int clientSocket)
+{
+    close(clientSocket);
+    cout << "Client with fd: " << clientSocket << " disconnected" << endl;
+    clients.erase(std::remove(clients.begin(), clients.end(), clientSocket), clients.end());
+}
+
+
+void Server::Send(int client, string message)
+{
+    cout << "Sending message to client: " << client << endl;
+    send(client, message.c_str(), message.size(), 0);
+
+}
 
 int main()
 {
