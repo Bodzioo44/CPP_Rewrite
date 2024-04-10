@@ -63,7 +63,7 @@ void MainWindow::Update_Lobby_List_Button_Action()
 void MainWindow::SocketTest()
 {
     socket = new QTcpSocket(this);
-    socket->connectToHost("127.0.0.1", 4444);
+    socket->connectToHost("192.168.1.14", 4444);
     if (socket->waitForConnected(5000))
     {
         cout << "Connected!";
