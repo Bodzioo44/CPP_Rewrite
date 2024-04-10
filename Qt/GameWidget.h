@@ -16,6 +16,7 @@ enum class GameType
 
 class GameWidget : public QWidget
 {
+    
     public:
         GameWidget(GameType game_type, Color player_color);
         //TODO make Draw methods depend on the board, its 8x8 rn.

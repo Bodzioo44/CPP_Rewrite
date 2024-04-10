@@ -25,8 +25,6 @@ private:
 
 class ListeningThread : public QThread
 {
-    Q_OBJECT
-
     public:
         ListeningThread();
         void run(int serverSocket);

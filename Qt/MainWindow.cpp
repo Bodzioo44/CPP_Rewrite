@@ -19,6 +19,16 @@ MainWindow::MainWindow()
     connect(Create_Lobby_Button, &QPushButton::clicked, this, &MainWindow::Create_Lobby_Button_Action);
     connect(Join_Lobby_Button, &QPushButton::clicked, this, &MainWindow::Join_Lobby_Button_Action);
     connect(Update_Lobby_List_Button, &QPushButton::clicked, this, &MainWindow::Update_Lobby_List_Button_Action);
+    SocketTest();
+    connect(socket, &QTcpSocket::readyRead, this, &MainWindow::Received);
+
+}
+
+
+void MainWindow::Received()
+{
+    QByteArray data = socket->readAll();
+    cout << "Received!: " << data.toStdString() << endl;
 }
 
 void MainWindow::Online_Button_Action()
@@ -47,4 +57,17 @@ void MainWindow::Join_Lobby_Button_Action()
 void MainWindow::Update_Lobby_List_Button_Action()
 {
     std::cout << "Update Lobby List Button Pressed" << std::endl;
+}
+
+
+void MainWindow::SocketTest()
+{
+    socket = new QTcpSocket(this);
+    socket->connectToHost("127.0.0.1", 4444);
+    if (socket->waitForConnected(5000))
+    {
+        cout << "Connected!";
+    }
+
+
 }
