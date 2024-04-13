@@ -1,21 +1,23 @@
-#include <algorithm>
-#include "Chess/game.h"
-#include <iostream>
-using namespace std;
 
-Game::Game(Color player_color_in)
+#include "Chess/game.h"
+
+
+
+Game::Game(Color player_color_in, GameWidget* game_widget_in)
 {
     player_color = player_color_in;
     turn = Color::WHITE;
     highlighted_squares = {};
     running = true;
     selected = nullptr;
+    game_widget = game_widget_in;
 }
 
 MOVES Game::GetHighlightedSquares()
 {
     return highlighted_squares;
 }
+
 
 
 void Game::ChangeTurn()

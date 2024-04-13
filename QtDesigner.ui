@@ -148,35 +148,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="IP_ComboBox">
-            <property name="editable">
-             <bool>true</bool>
-            </property>
-            <property name="maxVisibleItems">
-             <number>5</number>
-            </property>
-            <property name="placeholderText">
-             <string>Enter server ip...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="Name_ComboBox">
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-            <property name="editable">
-             <bool>true</bool>
-            </property>
-            <property name="maxVisibleItems">
-             <number>5</number>
-            </property>
-            <property name="placeholderText">
-             <string>Enter your name...</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QLineEdit" name="Name_Input_Box">
             <property name="placeholderText">
              <string>Enter your name...</string>

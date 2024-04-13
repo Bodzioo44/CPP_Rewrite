@@ -4,3 +4,6 @@ Server.sh
 aloo.sh
 .qmake.stash
 Makefile
+Qmake.sh
+CPP_Rewrite
+*.pro

@@ -1,14 +1,35 @@
 #include "Qt/GameWidget.h"
-#include <QImage>
 
-#include <iostream>
-using namespace std;
 
-GameWidget::GameWidget(GameType game_type_in, Color player_color_in): game(Game(player_color_in)){}
+
+//TODO add check if the game exists? bound game exists to the widget? idk
+GameWidget::GameWidget() {}
+GameWidget::~GameWidget() {delete game;}
+
+void GameWidget::SetGame(GameType game_type_in, Color player_color_in)
+{
+    game_type = game_type_in;
+    game = new Game(player_color_in, this);
+}
+
+
+// void GameWidget::SendMove(POS start, POS end, POS removed)
+// {
+
+//     // QJsonArray start_pair {start.first, start.second};
+//     // QJsonArray end_pair {end.first, end.second};
+//     // QJsonArray removed_pair {removed.first, removed.second};
+    
+//     // QJsonObject jsonMessage_part {{"START", start_pair}, {"END", end_pair}, {"REMOVED", removed_pair}};
+//     // QJsonObject jsonMessage {{GAME_UPDATE, jsonMessage_part}};
+
+//     // parent->SendData(jsonMessage);
+// }
 
 //TODO Fix the damn scaling, so it keep ratio, and stays a square!
 void GameWidget::resizeEvent(QResizeEvent*)
 {
+    //QWidget::resizeEvent(event);
     QSize size = this->size();
     int width = size.width();
     int height = size.height();
@@ -18,14 +39,16 @@ void GameWidget::resizeEvent(QResizeEvent*)
 
 void GameWidget::mousePressEvent(QMouseEvent* event)
 {
-    int x = event->x();
-    int y = event->y();
+    //QWidget::mousePressEvent(event);
+    QPointF pos = event->position();
+    int x = pos.x();
+    int y = pos.y();
     int row = y / square_size;
     int col = x / square_size;
     if (row >= 0 && row < 8 && col >= 0 && col < 8)
     {
         //cout << "Clicked on " << row << ", " << col << endl;
-        game.Select(make_pair(row, col));
+        game->Select(make_pair(row, col));
         update();
     }
     else {cout << "Clicked outside the board" << endl;}
@@ -34,10 +57,11 @@ void GameWidget::mousePressEvent(QMouseEvent* event)
 //Called on each rescale
 void GameWidget::paintEvent(QPaintEvent*)
 {
+    //QWidget::paintEvent(event);
     QPainter painter(this);
     DrawSquares(painter);   
     DrawPieces(painter);
-    DrawHighlight(painter, game.GetHighlightedSquares());
+    DrawHighlight(painter, game->GetHighlightedSquares());
 }
 
 void GameWidget::DrawHighlight(QPainter &painter, MOVES squares)
@@ -78,7 +102,7 @@ void GameWidget::DrawPieces(QPainter &painter)
     {
         for (int j = 0; j < 8; j++)
         {
-            Piece* p = game.GetBoard().GetPiece(make_pair(i, j));
+            Piece* p = game->GetBoard().GetPiece(make_pair(i, j));
             if (p != nullptr)
             {   
                 QImage image(p->GetPath().c_str());

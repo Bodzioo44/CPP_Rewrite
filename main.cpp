@@ -1,10 +1,8 @@
-#include <QApplication>
+#include <QtWidgets/QApplication>
 #include "Qt/MainWindow.cpp"
 
 #include <iostream>
 using namespace std;
-
-#include "Client.h"
 
 
 int main(int argc, char *argv[])
@@ -18,8 +16,5 @@ int main(int argc, char *argv[])
     MainWindow window;
     window.show();
     return app.exec();
-    
 
-    //Client client;
-    return 0;
 }

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'QtDesigner.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.3
+** Created by: Qt User Interface Compiler version 6.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -11,7 +11,6 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -52,8 +51,6 @@ public:
     QSpacerItem *verticalSpacer;
     QPushButton *Offline_Button;
     QLineEdit *IP_Input_Box;
-    QComboBox *IP_ComboBox;
-    QComboBox *Name_ComboBox;
     QLineEdit *Name_Input_Box;
     QPushButton *Online_Button;
     QSpacerItem *verticalSpacer_2;
@@ -93,44 +90,44 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+            MainWindow->setObjectName("MainWindow");
         MainWindow->resize(867, 607);
         centralwidget = new QWidget(MainWindow);
-        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        centralwidget->setObjectName("centralwidget");
         gridLayoutWidget = new QWidget(centralwidget);
-        gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
+        gridLayoutWidget->setObjectName("gridLayoutWidget");
         gridLayoutWidget->setGeometry(QRect(-10, 0, 881, 611));
         gridLayout = new QGridLayout(gridLayoutWidget);
         gridLayout->setSpacing(6);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setObjectName("gridLayout");
         gridLayout->setContentsMargins(6, 6, 6, 6);
         Chat_Tab_Widget = new QTabWidget(gridLayoutWidget);
-        Chat_Tab_Widget->setObjectName(QString::fromUtf8("Chat_Tab_Widget"));
+        Chat_Tab_Widget->setObjectName("Chat_Tab_Widget");
         Global_Chat_Tab = new QWidget();
-        Global_Chat_Tab->setObjectName(QString::fromUtf8("Global_Chat_Tab"));
+        Global_Chat_Tab->setObjectName("Global_Chat_Tab");
         verticalLayoutWidget = new QWidget(Global_Chat_Tab);
-        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
+        verticalLayoutWidget->setObjectName("verticalLayoutWidget");
         verticalLayoutWidget->setGeometry(QRect(0, 0, 211, 541));
         Global_Chat_Tab_Layout = new QVBoxLayout(verticalLayoutWidget);
-        Global_Chat_Tab_Layout->setObjectName(QString::fromUtf8("Global_Chat_Tab_Layout"));
+        Global_Chat_Tab_Layout->setObjectName("Global_Chat_Tab_Layout");
         Global_Chat_Tab_Layout->setContentsMargins(0, 0, 0, 0);
         Global_Chat_Text_Edit = new QTextEdit(verticalLayoutWidget);
-        Global_Chat_Text_Edit->setObjectName(QString::fromUtf8("Global_Chat_Text_Edit"));
+        Global_Chat_Text_Edit->setObjectName("Global_Chat_Text_Edit");
         Global_Chat_Text_Edit->setReadOnly(true);
 
         Global_Chat_Tab_Layout->addWidget(Global_Chat_Text_Edit);
 
         Chat_Tab_Widget->addTab(Global_Chat_Tab, QString());
         Lobby_Chat_Tab = new QWidget();
-        Lobby_Chat_Tab->setObjectName(QString::fromUtf8("Lobby_Chat_Tab"));
+        Lobby_Chat_Tab->setObjectName("Lobby_Chat_Tab");
         verticalLayoutWidget_2 = new QWidget(Lobby_Chat_Tab);
-        verticalLayoutWidget_2->setObjectName(QString::fromUtf8("verticalLayoutWidget_2"));
+        verticalLayoutWidget_2->setObjectName("verticalLayoutWidget_2");
         verticalLayoutWidget_2->setGeometry(QRect(0, 0, 211, 541));
         Lobby_Chat_Tab_Layout = new QVBoxLayout(verticalLayoutWidget_2);
-        Lobby_Chat_Tab_Layout->setObjectName(QString::fromUtf8("Lobby_Chat_Tab_Layout"));
+        Lobby_Chat_Tab_Layout->setObjectName("Lobby_Chat_Tab_Layout");
         Lobby_Chat_Tab_Layout->setContentsMargins(0, 0, 0, 0);
         Lobby_Chat_Text_Edit = new QTextEdit(verticalLayoutWidget_2);
-        Lobby_Chat_Text_Edit->setObjectName(QString::fromUtf8("Lobby_Chat_Text_Edit"));
+        Lobby_Chat_Text_Edit->setObjectName("Lobby_Chat_Text_Edit");
         Lobby_Chat_Text_Edit->setReadOnly(true);
 
         Lobby_Chat_Tab_Layout->addWidget(Lobby_Chat_Text_Edit);
@@ -140,91 +137,76 @@ public:
         gridLayout->addWidget(Chat_Tab_Widget, 0, 1, 1, 1);
 
         Message_Input_Box = new QLineEdit(gridLayoutWidget);
-        Message_Input_Box->setObjectName(QString::fromUtf8("Message_Input_Box"));
+        Message_Input_Box->setObjectName("Message_Input_Box");
 
         gridLayout->addWidget(Message_Input_Box, 1, 1, 1, 1);
 
         Stacked_Widget = new QStackedWidget(gridLayoutWidget);
-        Stacked_Widget->setObjectName(QString::fromUtf8("Stacked_Widget"));
+        Stacked_Widget->setObjectName("Stacked_Widget");
         Connection_Page = new QWidget();
-        Connection_Page->setObjectName(QString::fromUtf8("Connection_Page"));
+        Connection_Page->setObjectName("Connection_Page");
         verticalLayoutWidget_4 = new QWidget(Connection_Page);
-        verticalLayoutWidget_4->setObjectName(QString::fromUtf8("verticalLayoutWidget_4"));
+        verticalLayoutWidget_4->setObjectName("verticalLayoutWidget_4");
         verticalLayoutWidget_4->setGeometry(QRect(30, 10, 501, 551));
         Connection_Page_Layout = new QVBoxLayout(verticalLayoutWidget_4);
-        Connection_Page_Layout->setObjectName(QString::fromUtf8("Connection_Page_Layout"));
+        Connection_Page_Layout->setObjectName("Connection_Page_Layout");
         Connection_Page_Layout->setContentsMargins(0, 0, 0, 0);
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
 
         Connection_Page_Layout->addItem(verticalSpacer);
 
         Offline_Button = new QPushButton(verticalLayoutWidget_4);
-        Offline_Button->setObjectName(QString::fromUtf8("Offline_Button"));
+        Offline_Button->setObjectName("Offline_Button");
 
         Connection_Page_Layout->addWidget(Offline_Button);
 
         IP_Input_Box = new QLineEdit(verticalLayoutWidget_4);
-        IP_Input_Box->setObjectName(QString::fromUtf8("IP_Input_Box"));
+        IP_Input_Box->setObjectName("IP_Input_Box");
 
         Connection_Page_Layout->addWidget(IP_Input_Box);
 
-        IP_ComboBox = new QComboBox(verticalLayoutWidget_4);
-        IP_ComboBox->setObjectName(QString::fromUtf8("IP_ComboBox"));
-        IP_ComboBox->setEditable(true);
-        IP_ComboBox->setMaxVisibleItems(5);
-
-        Connection_Page_Layout->addWidget(IP_ComboBox);
-
-        Name_ComboBox = new QComboBox(verticalLayoutWidget_4);
-        Name_ComboBox->setObjectName(QString::fromUtf8("Name_ComboBox"));
-        Name_ComboBox->setAutoFillBackground(false);
-        Name_ComboBox->setEditable(true);
-        Name_ComboBox->setMaxVisibleItems(5);
-
-        Connection_Page_Layout->addWidget(Name_ComboBox);
-
         Name_Input_Box = new QLineEdit(verticalLayoutWidget_4);
-        Name_Input_Box->setObjectName(QString::fromUtf8("Name_Input_Box"));
+        Name_Input_Box->setObjectName("Name_Input_Box");
 
         Connection_Page_Layout->addWidget(Name_Input_Box);
 
         Online_Button = new QPushButton(verticalLayoutWidget_4);
-        Online_Button->setObjectName(QString::fromUtf8("Online_Button"));
+        Online_Button->setObjectName("Online_Button");
 
         Connection_Page_Layout->addWidget(Online_Button);
 
-        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
 
         Connection_Page_Layout->addItem(verticalSpacer_2);
 
         Stacked_Widget->addWidget(Connection_Page);
         Lobby_List_Page = new QWidget();
-        Lobby_List_Page->setObjectName(QString::fromUtf8("Lobby_List_Page"));
+        Lobby_List_Page->setObjectName("Lobby_List_Page");
         verticalLayoutWidget_3 = new QWidget(Lobby_List_Page);
-        verticalLayoutWidget_3->setObjectName(QString::fromUtf8("verticalLayoutWidget_3"));
+        verticalLayoutWidget_3->setObjectName("verticalLayoutWidget_3");
         verticalLayoutWidget_3->setGeometry(QRect(0, 10, 561, 581));
         Lobby_List_Page_Layout = new QVBoxLayout(verticalLayoutWidget_3);
-        Lobby_List_Page_Layout->setObjectName(QString::fromUtf8("Lobby_List_Page_Layout"));
+        Lobby_List_Page_Layout->setObjectName("Lobby_List_Page_Layout");
         Lobby_List_Page_Layout->setContentsMargins(0, 0, 0, 0);
         Lobby_List_Tree_Widget = new QTreeWidget(verticalLayoutWidget_3);
-        Lobby_List_Tree_Widget->setObjectName(QString::fromUtf8("Lobby_List_Tree_Widget"));
+        Lobby_List_Tree_Widget->setObjectName("Lobby_List_Tree_Widget");
 
         Lobby_List_Page_Layout->addWidget(Lobby_List_Tree_Widget);
 
         Lobby_List_Page_Buttons_Layout = new QHBoxLayout();
-        Lobby_List_Page_Buttons_Layout->setObjectName(QString::fromUtf8("Lobby_List_Page_Buttons_Layout"));
+        Lobby_List_Page_Buttons_Layout->setObjectName("Lobby_List_Page_Buttons_Layout");
         Create_Lobby_Button = new QPushButton(verticalLayoutWidget_3);
-        Create_Lobby_Button->setObjectName(QString::fromUtf8("Create_Lobby_Button"));
+        Create_Lobby_Button->setObjectName("Create_Lobby_Button");
 
         Lobby_List_Page_Buttons_Layout->addWidget(Create_Lobby_Button);
 
         Join_Lobby_Button = new QPushButton(verticalLayoutWidget_3);
-        Join_Lobby_Button->setObjectName(QString::fromUtf8("Join_Lobby_Button"));
+        Join_Lobby_Button->setObjectName("Join_Lobby_Button");
 
         Lobby_List_Page_Buttons_Layout->addWidget(Join_Lobby_Button);
 
         Update_Lobby_List_Button = new QPushButton(verticalLayoutWidget_3);
-        Update_Lobby_List_Button->setObjectName(QString::fromUtf8("Update_Lobby_List_Button"));
+        Update_Lobby_List_Button->setObjectName("Update_Lobby_List_Button");
 
         Lobby_List_Page_Buttons_Layout->addWidget(Update_Lobby_List_Button);
 
@@ -233,64 +215,64 @@ public:
 
         Stacked_Widget->addWidget(Lobby_List_Page);
         Lobby_Creation_Page = new QWidget();
-        Lobby_Creation_Page->setObjectName(QString::fromUtf8("Lobby_Creation_Page"));
+        Lobby_Creation_Page->setObjectName("Lobby_Creation_Page");
         verticalLayoutWidget_7 = new QWidget(Lobby_Creation_Page);
-        verticalLayoutWidget_7->setObjectName(QString::fromUtf8("verticalLayoutWidget_7"));
+        verticalLayoutWidget_7->setObjectName("verticalLayoutWidget_7");
         verticalLayoutWidget_7->setGeometry(QRect(60, 49, 521, 531));
         Lobby_Creation_Layout = new QVBoxLayout(verticalLayoutWidget_7);
-        Lobby_Creation_Layout->setObjectName(QString::fromUtf8("Lobby_Creation_Layout"));
+        Lobby_Creation_Layout->setObjectName("Lobby_Creation_Layout");
         Lobby_Creation_Layout->setContentsMargins(0, 0, 0, 0);
-        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
 
         Lobby_Creation_Layout->addItem(verticalSpacer_3);
 
         Checkers_2_Button = new QPushButton(verticalLayoutWidget_7);
-        Checkers_2_Button->setObjectName(QString::fromUtf8("Checkers_2_Button"));
+        Checkers_2_Button->setObjectName("Checkers_2_Button");
 
         Lobby_Creation_Layout->addWidget(Checkers_2_Button);
 
         Chess_4_Button = new QPushButton(verticalLayoutWidget_7);
-        Chess_4_Button->setObjectName(QString::fromUtf8("Chess_4_Button"));
+        Chess_4_Button->setObjectName("Chess_4_Button");
 
         Lobby_Creation_Layout->addWidget(Chess_4_Button);
 
         Chess_2_Button = new QPushButton(verticalLayoutWidget_7);
-        Chess_2_Button->setObjectName(QString::fromUtf8("Chess_2_Button"));
+        Chess_2_Button->setObjectName("Chess_2_Button");
 
         Lobby_Creation_Layout->addWidget(Chess_2_Button);
 
         Exit_Lobby_Creation_Button = new QPushButton(verticalLayoutWidget_7);
-        Exit_Lobby_Creation_Button->setObjectName(QString::fromUtf8("Exit_Lobby_Creation_Button"));
+        Exit_Lobby_Creation_Button->setObjectName("Exit_Lobby_Creation_Button");
 
         Lobby_Creation_Layout->addWidget(Exit_Lobby_Creation_Button);
 
-        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
 
         Lobby_Creation_Layout->addItem(verticalSpacer_4);
 
         Stacked_Widget->addWidget(Lobby_Creation_Page);
         Lobby_Info_Page = new QWidget();
-        Lobby_Info_Page->setObjectName(QString::fromUtf8("Lobby_Info_Page"));
+        Lobby_Info_Page->setObjectName("Lobby_Info_Page");
         verticalLayoutWidget_5 = new QWidget(Lobby_Info_Page);
-        verticalLayoutWidget_5->setObjectName(QString::fromUtf8("verticalLayoutWidget_5"));
+        verticalLayoutWidget_5->setObjectName("verticalLayoutWidget_5");
         verticalLayoutWidget_5->setGeometry(QRect(10, 10, 611, 581));
         Lobby_Info_Page_Layout = new QVBoxLayout(verticalLayoutWidget_5);
-        Lobby_Info_Page_Layout->setObjectName(QString::fromUtf8("Lobby_Info_Page_Layout"));
+        Lobby_Info_Page_Layout->setObjectName("Lobby_Info_Page_Layout");
         Lobby_Info_Page_Layout->setContentsMargins(0, 0, 0, 0);
         Lobby_Info_Labels_Layout = new QHBoxLayout();
-        Lobby_Info_Labels_Layout->setObjectName(QString::fromUtf8("Lobby_Info_Labels_Layout"));
+        Lobby_Info_Labels_Layout->setObjectName("Lobby_Info_Labels_Layout");
         Lobby_ID_Label = new QLabel(verticalLayoutWidget_5);
-        Lobby_ID_Label->setObjectName(QString::fromUtf8("Lobby_ID_Label"));
+        Lobby_ID_Label->setObjectName("Lobby_ID_Label");
 
         Lobby_Info_Labels_Layout->addWidget(Lobby_ID_Label);
 
         Lobby_Type_Label = new QLabel(verticalLayoutWidget_5);
-        Lobby_Type_Label->setObjectName(QString::fromUtf8("Lobby_Type_Label"));
+        Lobby_Type_Label->setObjectName("Lobby_Type_Label");
 
         Lobby_Info_Labels_Layout->addWidget(Lobby_Type_Label);
 
         Lobby_Players_Label = new QLabel(verticalLayoutWidget_5);
-        Lobby_Players_Label->setObjectName(QString::fromUtf8("Lobby_Players_Label"));
+        Lobby_Players_Label->setObjectName("Lobby_Players_Label");
 
         Lobby_Info_Labels_Layout->addWidget(Lobby_Players_Label);
 
@@ -298,24 +280,24 @@ public:
         Lobby_Info_Page_Layout->addLayout(Lobby_Info_Labels_Layout);
 
         Lobby_Info_Tree_Widget = new QTreeWidget(verticalLayoutWidget_5);
-        Lobby_Info_Tree_Widget->setObjectName(QString::fromUtf8("Lobby_Info_Tree_Widget"));
+        Lobby_Info_Tree_Widget->setObjectName("Lobby_Info_Tree_Widget");
 
         Lobby_Info_Page_Layout->addWidget(Lobby_Info_Tree_Widget);
 
         Lobby_Info_Buttons_Layput = new QHBoxLayout();
-        Lobby_Info_Buttons_Layput->setObjectName(QString::fromUtf8("Lobby_Info_Buttons_Layput"));
+        Lobby_Info_Buttons_Layput->setObjectName("Lobby_Info_Buttons_Layput");
         Leave_Lobby_Button = new QPushButton(verticalLayoutWidget_5);
-        Leave_Lobby_Button->setObjectName(QString::fromUtf8("Leave_Lobby_Button"));
+        Leave_Lobby_Button->setObjectName("Leave_Lobby_Button");
 
         Lobby_Info_Buttons_Layput->addWidget(Leave_Lobby_Button);
 
         Start_Lobby_Button = new QPushButton(verticalLayoutWidget_5);
-        Start_Lobby_Button->setObjectName(QString::fromUtf8("Start_Lobby_Button"));
+        Start_Lobby_Button->setObjectName("Start_Lobby_Button");
 
         Lobby_Info_Buttons_Layput->addWidget(Start_Lobby_Button);
 
         Kick_Player_Button = new QPushButton(verticalLayoutWidget_5);
-        Kick_Player_Button->setObjectName(QString::fromUtf8("Kick_Player_Button"));
+        Kick_Player_Button->setObjectName("Kick_Player_Button");
 
         Lobby_Info_Buttons_Layput->addWidget(Kick_Player_Button);
 
@@ -324,12 +306,12 @@ public:
 
         Stacked_Widget->addWidget(Lobby_Info_Page);
         Game_Page = new QWidget();
-        Game_Page->setObjectName(QString::fromUtf8("Game_Page"));
+        Game_Page->setObjectName("Game_Page");
         verticalLayoutWidget_6 = new QWidget(Game_Page);
-        verticalLayoutWidget_6->setObjectName(QString::fromUtf8("verticalLayoutWidget_6"));
+        verticalLayoutWidget_6->setObjectName("verticalLayoutWidget_6");
         verticalLayoutWidget_6->setGeometry(QRect(50, 0, 591, 571));
         Game_Page_Layout = new QVBoxLayout(verticalLayoutWidget_6);
-        Game_Page_Layout->setObjectName(QString::fromUtf8("Game_Page_Layout"));
+        Game_Page_Layout->setObjectName("Game_Page_Layout");
         Game_Page_Layout->setContentsMargins(0, 0, 0, 0);
         Stacked_Widget->addWidget(Game_Page);
 
@@ -356,8 +338,6 @@ public:
         Message_Input_Box->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter message...", nullptr));
         Offline_Button->setText(QCoreApplication::translate("MainWindow", "Offline", nullptr));
         IP_Input_Box->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter server ip...", nullptr));
-        IP_ComboBox->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter server ip...", nullptr));
-        Name_ComboBox->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter your name...", nullptr));
         Name_Input_Box->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter your name...", nullptr));
         Online_Button->setText(QCoreApplication::translate("MainWindow", "Online", nullptr));
         QTreeWidgetItem *___qtreewidgetitem = Lobby_List_Tree_Widget->headerItem();
