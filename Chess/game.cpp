@@ -1,6 +1,6 @@
 
 #include "Chess/game.h"
-
+#include "Qt/GameWidget.h"
 
 
 Game::Game(Color player_color_in, GameWidget* game_widget_in)
@@ -18,7 +18,14 @@ MOVES Game::GetHighlightedSquares()
     return highlighted_squares;
 }
 
-
+void Game::CheckForPromotion()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        if (board.GetPiece(POS(0, i)) != nullptr && board.GetPiece(POS(0, i))->GetName() == "Pawn")
+        {}
+    }
+}
 
 void Game::ChangeTurn()
 {

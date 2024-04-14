@@ -1,9 +1,11 @@
 #include "Qt/GameWidget.h"
-
+#include "Qt/MainWindow.h"
 
 
 //TODO add check if the game exists? bound game exists to the widget? idk
-GameWidget::GameWidget() {}
+GameWidget::GameWidget(MainWindow* parent_in) {
+    parent = parent_in;
+}
 GameWidget::~GameWidget() {delete game;}
 
 void GameWidget::SetGame(GameType game_type_in, Color player_color_in)

@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "Chess/board.h"
-#include "Qt/GameWidget.h"
 
 class GameWidget;
 
@@ -17,10 +16,13 @@ class Game
     public:
         Game(Color player_color_in, GameWidget* game_widget);
         void Select(POS pos);
-        void ChangeTurn();
+
         Board& GetBoard(); //change to copy instead of reference?
         MOVES GetHighlightedSquares();
     private:
+        void CheckForPromotion();
+        void ChangeTurn();
+
         Color turn;
         Color player_color;
         //make board public?
