@@ -3,9 +3,7 @@
 
 
 //TODO add check if the game exists? bound game exists to the widget? idk
-GameWidget::GameWidget(MainWindow* parent_in) {
-    parent = parent_in;
-}
+GameWidget::GameWidget() {}
 GameWidget::~GameWidget() {delete game;}
 
 void GameWidget::SetGame(GameType game_type_in, Color player_color_in)
@@ -42,7 +40,8 @@ void GameWidget::resizeEvent(QResizeEvent*)
 void GameWidget::mousePressEvent(QMouseEvent* event)
 {
     //QWidget::mousePressEvent(event);
-    QPointF pos = event->position();
+    //QPointF pos = event->position();
+    QPoint pos = event->pos();
     int x = pos.x();
     int y = pos.y();
     int row = y / square_size;
@@ -56,7 +55,7 @@ void GameWidget::mousePressEvent(QMouseEvent* event)
     else {cout << "Clicked outside the board" << endl;}
 }
 
-//Called on each rescale
+//also called on each rescale
 void GameWidget::paintEvent(QPaintEvent*)
 {
     //QWidget::paintEvent(event);

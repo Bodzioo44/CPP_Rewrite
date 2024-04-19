@@ -99,7 +99,7 @@ void MainWindow::Online_Button_Action()
 void MainWindow::Offline_Button_Action()
 {   
     Stacked_Widget->setCurrentWidget(Game_Page);
-    GameWidget* game = new GameWidget(this);
+    GameWidget* game = new GameWidget();
     game->SetGame(GameType::CHESS_2, Color::WHITE);
     Game_Page_Layout->addWidget(game);
 }
