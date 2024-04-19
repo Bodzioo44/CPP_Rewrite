@@ -6,4 +6,4 @@ aloo.sh
 Makefile
 Qmake.sh
 CPP_Rewrite
-*.pro
+CPP_Rewrite.pro
