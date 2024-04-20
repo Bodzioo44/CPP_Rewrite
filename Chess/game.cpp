@@ -2,6 +2,7 @@
 #include "Chess/game.h"
 #include "Qt/GameWidget.h"
 
+using namespace Chess_2;
 
 Game::Game(Color player_color_in, GameWidget* game_widget_in)
 {
@@ -62,7 +63,7 @@ void Game::Select(POS pos)
             cout << "Valid moves: ";
             for (POS move : valid_moves)
             {
-                cout << "(" <<move.first << ", " << move.second << ") ";
+                cout << "(" << move.first << ", " << move.second << ") ";
             }
             cout << endl;
 

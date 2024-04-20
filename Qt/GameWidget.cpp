@@ -1,5 +1,4 @@
 #include "Qt/GameWidget.h"
-#include "Qt/MainWindow.h"
 
 
 //TODO add check if the game exists? bound game exists to the widget? idk

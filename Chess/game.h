@@ -11,30 +11,37 @@ class GameWidget;
 #include <iostream>
 using namespace std;
 
-class Game
+namespace Chess_2
 {
-    public:
-        Game(Color player_color_in, GameWidget* game_widget);
-        void Select(POS pos);
+    class Game
+    {
+        public:
+            Game(Color player_color_in, GameWidget* game_widget);
+            void Select(POS pos);
+            void ReceiveUpdate(POS start, POS end, POS removed);
 
-        Board& GetBoard(); //change to copy instead of reference?
-        MOVES GetHighlightedSquares();
-    private:
-        void CheckForPromotion();
-        void ChangeTurn();
+            Board& GetBoard(); //change to copy instead of reference?
+            MOVES GetHighlightedSquares();
 
-        Color turn;
-        Color player_color;
-        //make board public?
-        Board board; //so this initializes the board even before the constructor is called.
-        Piece* selected;
-        POS selected_pos;
-        MOVES valid_moves;
-        MOVES highlighted_squares;
-        bool running;
+        private:
+            void SendUpdate(POS start, POS end, POS removed);
+            void SendPromotionWindow();
+            void CheckForPromotion();
+            void ChangeTurn();
 
-        //needed to somehow communicate with the GUI?
-        GameWidget* game_widget;
-};
+            Color turn;
+            Color player_color;
+            //make board public?
+            Board board; //so this initializes the board even before the constructor is called.
+            Piece* selected;
+            POS selected_pos;
+            MOVES valid_moves;
+            MOVES highlighted_squares;
+            bool running;
+
+            //needed to somehow communicate with the GUI?
+            GameWidget* game_widget;
+    };
+}
 
 #endif

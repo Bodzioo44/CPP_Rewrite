@@ -39,6 +39,8 @@ class Board
         POS whiteKing; //Position of the white king
         POS blackKing; //Position of the black king
         POS enPassant; //Position of the en passant square
+
+        
 };
 
 

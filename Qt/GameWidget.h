@@ -9,7 +9,6 @@
 
 #include "Chess/game.h"
 
-class MainWindow;
 
 enum class GameType
 {
@@ -17,6 +16,9 @@ enum class GameType
     CHECKERS_2,
     CHESS_4
 };
+
+
+using namespace Chess_2;
 
 class GameWidget : public QWidget
 {
