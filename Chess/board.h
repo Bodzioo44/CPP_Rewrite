@@ -38,7 +38,7 @@ class Board
         Board(const Board &board);
         ~Board();
         
-        void Move(POS start, POS end); //Assuming that the move is valid!!! (checks are made inside game class)
+        QJsonArray Move(POS start, POS end); //Assuming that the move is valid!!! (checks are made inside game class)
         void PrintBoard() const; //Prints the board in terminal
         SquareState CheckSquare(POS pos, Color color) const; //Checks the state of the square
         Piece* GetPiece(POS pos) const; //Returns the piece pointer at the given position
@@ -56,8 +56,6 @@ class Board
         POS blackKing; //Position of the black king
         POS enPassant; //Position of the en passant square
 
-        //vector<POS> MoveUpdate;
-        QJsonObject MoveUpdate;
 
 };
 
