@@ -41,6 +41,7 @@ MainWindow::MainWindow()
     socket = new QTcpSocket(this);
     connect(socket, &QTcpSocket::readyRead, this, &MainWindow::Message_Handler);
     connect(socket, &QTcpSocket::disconnected, this, &MainWindow::Disconnected);
+    
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +50,14 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::Received_Game_Update(QJsonArray jsonMessage)
+{
+    cout << "Received Game Update!" << endl;
+    for (QJsonValue value : jsonMessage)
+    {
+        SendData(value.toObject());
+    }
+}
 
 /////////////////////////////////
 //QTcpSocket STUFF (SEND/RECEIVE)
@@ -94,14 +103,16 @@ void MainWindow::Online_Button_Action()
     {
         cout << "Failed to connect! Check if Ip is correct!" << endl;
     }
+    Stacked_Widget->setCurrentWidget(Connection_Page);
 }
 
 void MainWindow::Offline_Button_Action()
 {   
     Stacked_Widget->setCurrentWidget(Game_Page);
-    GameWidget* game = new GameWidget();
-    game->SetGame(GameType::CHESS_2, Color::WHITE);
-    Game_Page_Layout->addWidget(game);
+    game_widget = new GameWidget();
+    game_widget->SetGame(GameType::CHESS_2, Color::WHITE);
+    Game_Page_Layout->addWidget(game_widget);
+    connect(game_widget, &GameWidget::MoveMade, this, &MainWindow::Received_Game_Update);
 }
 
 

@@ -12,18 +12,11 @@ void GameWidget::SetGame(GameType game_type_in, Color player_color_in)
 }
 
 
-// void GameWidget::SendMove(POS start, POS end, POS removed)
-// {
-
-//     // QJsonArray start_pair {start.first, start.second};
-//     // QJsonArray end_pair {end.first, end.second};
-//     // QJsonArray removed_pair {removed.first, removed.second};
-    
-//     // QJsonObject jsonMessage_part {{"START", start_pair}, {"END", end_pair}, {"REMOVED", removed_pair}};
-//     // QJsonObject jsonMessage {{GAME_UPDATE, jsonMessage_part}};
-
-//     // parent->SendData(jsonMessage);
-// }
+void GameWidget::SendMove(QJsonArray jsonMessage)
+{
+    cout << "Emiting signal inside GameWidget!" << endl;
+    emit MoveMade(jsonMessage);
+}
 
 //TODO Fix the damn scaling, so it keep ratio, and stays a square!
 void GameWidget::resizeEvent(QResizeEvent*)

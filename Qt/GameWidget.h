@@ -37,10 +37,12 @@ class GameWidget : public QWidget
         void DrawHighlight(QPainter &painter, MOVES squares);
 
         //Game-GameWidget communication
-        //void SendMove(POS start, POS end, POS removed);
+        void SendMove(QJsonArray jsonMessage);
+    private:
+
 
     signals:
-        void MoveMade();
+        void MoveMade(QJsonArray jsonMessage);
 
     protected:
         constexpr static float scale = 0.75;
