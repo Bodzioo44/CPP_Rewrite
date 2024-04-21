@@ -90,7 +90,6 @@ void MainWindow::Disconnected()
 //CONNECTION PAGE
 /////////////////
 
-
 void MainWindow::Online_Button_Action()
 {
     socket->connectToHost(IP_Input_Box->text(), 4444);

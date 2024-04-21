@@ -14,29 +14,32 @@ Game::Game(Color player_color_in, GameWidget* game_widget_in)
     game_widget = game_widget_in;
 }
 
-MOVES Game::GetHighlightedSquares()
+//TODO: Test this
+void Game::ReceiveUpdate(QJsonObject jsonMessage)
 {
-    return highlighted_squares;
-}
-
-void Game::CheckForPromotion()
-{
-    for (int i = 0; i < 8; i++)
+    for (QString key : jsonMessage.keys())
     {
-        if (board.GetPiece(POS(0, i)) != nullptr && board.GetPiece(POS(0, i))->GetName() == "Pawn")
-        {}
-    }
-}
-
-void Game::ChangeTurn()
-{
-    if (turn == Color::WHITE)
-    {
-        turn = Color::BLACK;
-    }
-    else
-    {
-        turn = Color::WHITE;
+        if (key == "Start")
+        {
+            QJsonArray move = jsonMessage[key].toArray();
+            POS start = POS(move[0].toInt(), move[1].toInt());
+            POS end = POS(jsonMessage["End"].toArray()[0].toInt(), jsonMessage["End"].toArray()[1].toInt());
+            board.Move(start, end);
+            ChangeTurn();
+        }
+        else if (key == "Promotion")
+        {
+            QJsonArray promotion = jsonMessage[key].toArray();
+            POS pos = POS(promotion[0].toInt(), promotion[1].toInt());
+            string piece = promotion[2].toString().toStdString();
+            board.Promote(pos, piece);
+        }
+        else if (key == "Removed")
+        {
+            QJsonArray removed = jsonMessage[key].toArray();
+            POS pos = POS(removed[0].toInt(), removed[1].toInt());
+            board.NukeTile(pos);
+        }
     }
 }
 
@@ -90,57 +93,13 @@ void Game::Select(POS pos)
         {
             cout << "Moving: " << selected->Info() << " to: " << row << ", " << col << endl;
             QJsonArray Moves = board.Move(selected_pos, pos);
+            QJsonObject Promotion = CheckForPromotion();
+            if (!Promotion.isEmpty())
+            {
+                Moves.push_back(Promotion);
+            }
             
             game_widget->SendMove(Moves);
-
-            /*
-            QJsonDocument doc(Moves);
-            cout << doc.toJson().toStdString() << endl;
-
-            for (auto Action : Moves)
-            {
-                cout << typeid(Action).name() << endl;
-                QJsonObject Action_obj = Action.toObject();
-                cout << typeid(Action_obj).name() << endl;
-                for (auto key : Action_obj.keys())
-                {
-                    cout << key.toStdString() << endl;
-                }
-                if (Action_obj.contains("Starting"))
-                {
-                    cout << "Starting: " << Action_obj["Starting"].toArray()[0].toInt() << ", " << Action_obj["Starting"].toArray()[1].toInt() << endl;
-                }
-                QJsonArray Starting = Action_obj["Start"].toArray();
-                QJsonArray Ending = Action_obj["Ending"].toArray();
-                
-                for (auto val : Starting)
-                {
-                    cout << "we are here";
-                    cout << typeid(val).name() << endl;
-                    cout << val.toInt() << endl;
-                }
-                for (auto val : Ending)
-                {
-                    cout << val.toInt() << endl;
-                }
-                
-            }
-            
-            for (QJsonValue Action: Moves)
-            {
-                if (Action.isObject())
-                {
-                    QJsonObject Action_obj = Action.toObject();
-
-                    POS start = make_pair(Action_obj["Starting"].toArray()[0].toInt(), Action_obj["Starting"].toArray()[1].toInt());
-                    POS end = make_pair(Action_obj["Ending"].toArray()[0].toInt(), Action_obj["Ending"].toArray()[1].toInt());
-                    //POS deleted = make_pair(Action_obj["Deleted"].toArray()[0].toInt(), Action_obj["Deleted"].toArray()[1].toInt());
-                    cout << "Starting: " << start.first << ", " << start.second << endl;
-                    cout << "Ending: " << end.first << ", " << end.second << endl;
-                    //cout << "Deleted: " << deleted.first << ", " << deleted.second << endl;
-                }
-            }
-            */
 
             highlighted_squares.clear();
             ChangeTurn();
@@ -148,6 +107,52 @@ void Game::Select(POS pos)
         }
     }
 
+}
+
+
+MOVES Game::GetHighlightedSquares()
+{
+    return highlighted_squares;
+}
+
+
+QJsonObject Game::CheckForPromotion()
+{
+    QJsonObject Action = {};
+    for (int i = 0; i < 8; i++)
+    {
+        if (board.GetPiece(POS(0, i)) != nullptr && board.GetPiece(POS(0, i))->GetName() == "Pawn")
+        {
+            string promotion = game_widget->PopUpPromotionBox();
+            board.Promote(POS(0, i), promotion);
+
+            Action["Promotion"] = QJsonArray({0,i});
+            Action["Removed"] = QJsonArray({0,i});
+
+        }
+        else if (board.GetPiece(POS(7, i)) != nullptr && board.GetPiece(POS(7, i))->GetName() == "Pawn")
+        {
+            string promotion = game_widget->PopUpPromotionBox();
+            cout << "We got here" << endl;
+            board.Promote(POS(7, i), promotion);
+            Action["Promotion"] = QJsonArray({7,i});
+            Action["Removed"] = QJsonArray({7,i});
+        }
+    }
+    return Action;
+    
+}
+
+void Game::ChangeTurn()
+{
+    if (turn == Color::WHITE)
+    {
+        turn = Color::BLACK;
+    }
+    else
+    {
+        turn = Color::WHITE;
+    }
 }
 
 

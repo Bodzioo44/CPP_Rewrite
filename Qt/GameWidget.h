@@ -2,9 +2,14 @@
 #define GAMEWIDGET_H
 
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/QPushButton>
+
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QImage>
+
 #include <QtCore/QObject>
 
 #include "Chess/game.h"
@@ -16,7 +21,6 @@ enum class GameType
     CHECKERS_2,
     CHESS_4
 };
-
 
 using namespace Chess_2;
 
@@ -38,8 +42,10 @@ class GameWidget : public QWidget
 
         //Game-GameWidget communication
         void SendMove(QJsonArray jsonMessage);
-    private:
+        string PopUpPromotionBox();
 
+    private:
+        
 
     signals:
         void MoveMade(QJsonArray jsonMessage);

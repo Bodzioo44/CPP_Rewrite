@@ -1,2 +1,13 @@
 Only use 1 game widget initialized in the MainWindow constructor, and add methods for removing/starting games.
 connect the slot only once inside constructor.
+
+Fix GameWidget permissions
+
+Check if piece type enum can be more usefull? //Nah its useless
+
+Merge "Removed" key with others?
+
+While processing game history, only change turn after "Move" key (ignore promotions)
+
+
+Check if ReceiveUpdate is working (after server is up.)

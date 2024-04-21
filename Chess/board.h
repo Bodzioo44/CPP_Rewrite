@@ -45,11 +45,12 @@ class Board
         bool IsSquareChecked(POS pos, Color color) const; //Checks if the square is under attack by the enemy
         bool IsMoveValid(POS start, POS end, Color color) const; //Checks if the move is valid without actually making the move
         POS GetEnPassant() const; //Returns the en passant square
+        void Promote(POS pos, string piece); //Promotes the pawn at the given position
+        bool NukeTile(POS pos); //If there is a piece at the given position, delete it and replace with null ptr
 
     private:
         void CreateBoard(); // creates the pieces and places pointers to them on the board
         void UpdateKingPOS(POS end); //Called only after king moves, updates the king's position assuming that the POS end is the king's new position
-        bool NukeTile(POS pos); //If there is a piece at the given position, delete it and replace with null ptr
         POS GetKingPOS(Color color) const; //Returns the position of the king of the given color
         BOARD board; //2d array of Piece* pointers
         POS whiteKing; //Position of the white king

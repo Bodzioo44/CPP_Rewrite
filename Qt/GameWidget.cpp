@@ -106,3 +106,36 @@ void GameWidget::DrawPieces(QPainter &painter)
         }
     }
 }
+
+
+string GameWidget::PopUpPromotionBox()
+{
+    QMessageBox msgBox(this);
+    msgBox.setText("Promote your pawn!");
+    QAbstractButton* queen = msgBox.addButton(tr("Queen"), QMessageBox::ActionRole);
+    QAbstractButton* rook = msgBox.addButton(tr("Rook"), QMessageBox::ActionRole);
+    QAbstractButton* bishop = msgBox.addButton(tr("Bishop"), QMessageBox::ActionRole);
+    QAbstractButton* knight = msgBox.addButton(tr("Knight"), QMessageBox::ActionRole);
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == queen)
+    {
+        return "Queen";
+    }
+    else if (msgBox.clickedButton() == rook)
+    {
+        return "Rook";
+    }
+    else if (msgBox.clickedButton() == bishop)
+    {
+        return "Bishop";
+    }
+    else if (msgBox.clickedButton() == knight)
+    {
+        return "Knight";
+    }
+    else
+    {
+        return "Queen";
+    }
+}

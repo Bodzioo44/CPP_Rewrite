@@ -18,15 +18,13 @@ namespace Chess_2
         public:
             Game(Color player_color_in, GameWidget* game_widget);
             void Select(POS pos);
-            void ReceiveUpdate(POS start, POS end, POS removed);
+            void ReceiveUpdate(QJsonObject jsonMessage);
 
             Board& GetBoard(); //change to copy instead of reference?
             MOVES GetHighlightedSquares();
 
         private:
-            void SendUpdate(POS start, POS end, POS removed);
-            void SendPromotionWindow();
-            void CheckForPromotion();
+            QJsonObject CheckForPromotion();
             void ChangeTurn();
 
             Color turn;

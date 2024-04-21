@@ -138,9 +138,7 @@ QJsonArray Board::Move(POS start, POS end)
             {
                 if (NukeTile(POS(end.first - 1, end.second)))
                 {
-                    QJsonObject Removed;
-                    Removed["Removed"] = QJsonArray({end.first - 1, end.second});
-                    Actions_List.append(Removed);
+                    Move["Removed"] = QJsonArray({end.first - 1, end.second});
                 }
             }
             else if (POS(end.first+1, end.second) == GetEnPassant()) //en passant check for white
@@ -148,18 +146,14 @@ QJsonArray Board::Move(POS start, POS end)
 
                 if (NukeTile(POS(end.first + 1, end.second)))
                 {
-                    QJsonObject Removed;
-                    Removed["Removed"] = QJsonArray({end.first + 1, end.second});
-                    Actions_List.append(Removed);
+                    Move["Removed"] = QJsonArray({end.first + 1, end.second});
                 }
             }
             else
             {
                 if (NukeTile(end))
                 {
-                    QJsonObject Removed;
-                    Removed["Removed"] = QJsonArray({end.first, end.second});
-                    Actions_List.append(Removed);
+                    Move["Removed"] = QJsonArray({end.first, end.second});
                 }
             }
             board[end.first][end.second] = p;
@@ -178,9 +172,7 @@ QJsonArray Board::Move(POS start, POS end)
         QJsonObject Move;
         if (NukeTile(end))
         {
-            QJsonObject Removed;
-            Removed["Removed"] = QJsonArray({end.first, end.second});
-            Actions_List.append(Removed);
+            Move["Removed"] = QJsonArray({end.first, end.second});
         }
         string name = p->GetName();
         if (name == "Rook")
@@ -194,10 +186,32 @@ QJsonArray Board::Move(POS start, POS end)
         Move["Start"] = QJsonArray({start.first, start.second});
         Move["End"] = QJsonArray({end.first, end.second});
         Actions_List.append(Move);
-
-
+        
     }
     return Actions_List;
+}
+
+
+void Board::Promote(POS pos, string piece)
+{
+    Color color = board[pos.first][pos.second]->GetColor();
+    NukeTile(pos);
+    if (piece == "Queen")
+    {
+        board[pos.first][pos.second] = new Queen(color);
+    }
+    else if (piece == "Rook")
+    {
+        board[pos.first][pos.second] = new Rook(color);
+    }
+    else if (piece == "Bishop")
+    {
+        board[pos.first][pos.second] = new Bishop(color);
+    }
+    else if (piece == "Knight")
+    {
+        board[pos.first][pos.second] = new Knight(color);
+    }
 }
 
 bool Board::IsSquareChecked(POS pos, Color color) const
