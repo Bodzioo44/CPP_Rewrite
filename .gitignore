@@ -7,3 +7,5 @@ Makefile
 Qmake.sh
 CPP_Rewrite
 **Test**
+Compile_Server.sh
+moc*
