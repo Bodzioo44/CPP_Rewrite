@@ -46,6 +46,7 @@ class GameWidget : public QWidget
         constexpr static float scale = 0.75;
         int square_size;
         GameType game_type;
+        //Add shared class for more games later on?
         Game* game;
 };
 
