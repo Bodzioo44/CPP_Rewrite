@@ -1,0 +1,2 @@
+Only use 1 game widget initialized in the MainWindow constructor, and add methods for removing/starting games.
+connect the slot only once inside constructor.
