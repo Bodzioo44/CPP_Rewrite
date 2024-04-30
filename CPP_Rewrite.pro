@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = CPP_Rewrite
+TARGET = Client
 INCLUDEPATH += .
 QT += core gui network widgets
 
