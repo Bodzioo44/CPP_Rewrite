@@ -4,15 +4,15 @@
 #include <utility>
 #include <vector>
 #include <string>
+
+#include "Include/enums.h"
+
 using namespace std;
-//TODO fix them imports
-class Board;
-//#define POS pair<int, int>
-//#define MOVES vector<POS>
 using POS = pair<int, int>;
 using MOVES = vector<POS>;
+using Color = Enums::Color;
 
-enum class Color {WHITE, BLACK};
+class Board;
 
 class Piece
 {

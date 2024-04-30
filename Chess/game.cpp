@@ -14,35 +14,11 @@ Game::Game(Color player_color_in, GameWidget* game_widget_in)
     game_widget = game_widget_in;
 }
 
-//TODO: Test this
+//TODO: Fix this
 void Game::ReceiveUpdate(QJsonObject jsonMessage)
 {
-    for (QString key : jsonMessage.keys())
-    {
-        if (key == "Start")
-        {
-            QJsonArray move = jsonMessage[key].toArray();
-            POS start = POS(move[0].toInt(), move[1].toInt());
-            POS end = POS(jsonMessage["End"].toArray()[0].toInt(), jsonMessage["End"].toArray()[1].toInt());
-            board.Move(start, end);
-            ChangeTurn();
-        }
-        else if (key == "Promotion")
-        {
-            QJsonArray promotion = jsonMessage[key].toArray();
-            POS pos = POS(promotion[0].toInt(), promotion[1].toInt());
-            string piece = promotion[2].toString().toStdString();
-            board.Promote(pos, piece);
-        }
-        else if (key == "Removed")
-        {
-            QJsonArray removed = jsonMessage[key].toArray();
-            POS pos = POS(removed[0].toInt(), removed[1].toInt());
-            board.NukeTile(pos);
-        }
-    }
-}
 
+}
 
 void Game::Select(POS pos)
 {
@@ -92,14 +68,17 @@ void Game::Select(POS pos)
         if (find(valid_moves.begin(), valid_moves.end(), pos) != valid_moves.end())
         {
             cout << "Moving: " << selected->Info() << " to: " << row << ", " << col << endl;
-            QJsonArray Moves = board.Move(selected_pos, pos);
-            QJsonObject Promotion = CheckForPromotion();
-            if (!Promotion.isEmpty())
+            QJsonObject Moves = board.Move(selected_pos, pos);
+            string Promotion = CheckForPromotion();
+            if (Promotion.size() != 0)
             {
-                Moves.push_back(Promotion);
+                Moves["type"] = "promotion";
+                Moves["additional_data"] = QString::fromStdString(Promotion);
             }
             
-            game_widget->SendMove(Moves);
+            QJsonObject Key_Moves;
+            Key_Moves["Game_Update"] = Moves;
+            game_widget->SendMove(Key_Moves);
 
             highlighted_squares.clear();
             ChangeTurn();
@@ -109,25 +88,15 @@ void Game::Select(POS pos)
 
 }
 
-
-MOVES Game::GetHighlightedSquares()
+string Game::CheckForPromotion()
 {
-    return highlighted_squares;
-}
-
-
-QJsonObject Game::CheckForPromotion()
-{
-    QJsonObject Action = {};
     for (int i = 0; i < 8; i++)
     {
         if (board.GetPiece(POS(0, i)) != nullptr && board.GetPiece(POS(0, i))->GetName() == "Pawn")
         {
             string promotion = game_widget->PopUpPromotionBox();
             board.Promote(POS(0, i), promotion);
-
-            Action["Promotion"] = QJsonArray({0,i});
-            Action["Removed"] = QJsonArray({0,i});
+            return promotion;
 
         }
         else if (board.GetPiece(POS(7, i)) != nullptr && board.GetPiece(POS(7, i))->GetName() == "Pawn")
@@ -135,12 +104,17 @@ QJsonObject Game::CheckForPromotion()
             string promotion = game_widget->PopUpPromotionBox();
             cout << "We got here" << endl;
             board.Promote(POS(7, i), promotion);
-            Action["Promotion"] = QJsonArray({7,i});
-            Action["Removed"] = QJsonArray({7,i});
+            return promotion;
         }
     }
-    return Action;
+    return "";
     
+}
+
+
+MOVES Game::GetHighlightedSquares()
+{
+    return highlighted_squares;
 }
 
 void Game::ChangeTurn()

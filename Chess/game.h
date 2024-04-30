@@ -24,7 +24,7 @@ namespace Chess_2
             MOVES GetHighlightedSquares();
 
         private:
-            QJsonObject CheckForPromotion();
+            string CheckForPromotion();
             void ChangeTurn();
 
             Color turn;

@@ -47,133 +47,93 @@ Board::~Board()
     //cout << "Board destroyed" << endl;
 }
 
-QJsonArray Board::Move(POS start, POS end)
+QJsonObject Board::Move(POS start, POS end)
 {
 
     Piece* p = board[start.first][start.second];
 
-    QJsonArray Actions_List;
+    QJsonObject Move;
+    Move["fromX"] = start.first;
+    Move["fromY"] = start.second;
+    Move["toX"] = end.first;
+    Move["toY"] = end.second;
 
     if (p->GetName() == "King" ) //King Moves
     {
         if (abs(start.second - end.second) > 1) //casting check
         {
-            QJsonObject Move1;
-            QJsonObject Move2;
-
+            Move["type"] = "castling";
             if (start.second > end.second)//long castling
             {
                 board[start.first][start.second - 2] = board[start.first][start.second];
                 board[start.first][start.second] = nullptr;
                 UpdateKingPOS(POS(start.first, start.second - 2));
-
-                Move1["Start"] = QJsonArray({start.first, start.second});
-                Move1["End"] = QJsonArray({start.first, start.second - 2});
                 
                 board[start.first][start.second - 1] = board[end.first][end.second];
                 board[end.first][end.second] = nullptr;
-
-                Move2["Start"] = QJsonArray({end.first, end.second});
-                Move2["End"] = QJsonArray({start.first, start.second - 1});
             }
             else//short castling
             {
-
                 board[start.first][start.second + 2] = board[start.first][start.second];
                 board[start.first][start.second] = nullptr;
                 UpdateKingPOS(POS(start.first, start.second + 2));
                 
-                Move1["Start"] = QJsonArray({start.first, start.second});
-                Move1["End"] = QJsonArray({start.first, start.second + 2});
-
                 board[start.first][start.second + 1] = board[end.first][end.second];
                 board[end.first][end.second] = nullptr;
-
-                Move2["Start"] = QJsonArray({end.first, end.second});
-                Move2["End"] = QJsonArray({start.first, start.second + 1});
             }
-
-            Actions_List.append(Move1);
-            Actions_List.append(Move2);
         }
         else //normal king moves
         {
-            QJsonObject Move;
-            if (NukeTile(end))
-            {
-                QJsonObject Removed;
-                Removed["Removed"] = QJsonArray({end.first, end.second});
-                Actions_List.append(Removed);
-            }
+            Move["type"] = "normal";
 
+            NukeTile(end);
             board[end.first][end.second] = p;
             board[start.first][start.second] = nullptr;
             UpdateKingPOS(end);
-
-            Move["Start"] = QJsonArray({start.first, start.second});
-            Move["End"] = QJsonArray({end.first, end.second});
-            Actions_List.append(Move);
-
         }
         p->FirstMove();
         enPassant = POS(-1,-1);
+
     }
     else if (p->GetName() == "Pawn") //Pawn special actions
     {
-        QJsonObject Move;
         if (abs(start.first - end.first) == 2) //if pawn moved by 2 squares forward, set en passant position
         {
+            Move["type"] = "normal";
+
             enPassant = end;
             p->FirstMove();
             board[end.first][end.second] = p;
             board[start.first][start.second] = nullptr;
-            Move["Start"] = QJsonArray({start.first, start.second});
-            Move["End"] = QJsonArray({end.first, end.second});
-            Actions_List.append(Move);
-
         }
         else //all other pawn moves
         {   
             if (POS(end.first-1, end.second) == GetEnPassant()) //en passant check for blac
             {
-                if (NukeTile(POS(end.first - 1, end.second)))
-                {
-                    Move["Removed"] = QJsonArray({end.first - 1, end.second});
-                }
+                NukeTile(POS(end.first - 1, end.second));
+                Move["type"] = "enpassant";
             }
             else if (POS(end.first+1, end.second) == GetEnPassant()) //en passant check for white
             {
 
-                if (NukeTile(POS(end.first + 1, end.second)))
-                {
-                    Move["Removed"] = QJsonArray({end.first + 1, end.second});
-                }
+                NukeTile(POS(end.first + 1, end.second));
+                Move["type"] = "enpassant";
             }
             else
             {
-                if (NukeTile(end))
-                {
-                    Move["Removed"] = QJsonArray({end.first, end.second});
-                }
+                NukeTile(end);
+                Move["type"] = "normal";
             }
             board[end.first][end.second] = p;
             board[start.first][start.second] = nullptr;
             p->FirstMove();
             enPassant = POS(-1,-1);
-
-            Move["Start"] = QJsonArray({start.first, start.second});
-            Move["End"] = QJsonArray({end.first, end.second});
-            Actions_List.append(Move);
-
         }
     }
     else //all other moves
     {
-        QJsonObject Move;
-        if (NukeTile(end))
-        {
-            Move["Removed"] = QJsonArray({end.first, end.second});
-        }
+        Move["type"] = "normal";
+        NukeTile(end);
         string name = p->GetName();
         if (name == "Rook")
         {
@@ -181,14 +141,9 @@ QJsonArray Board::Move(POS start, POS end)
         }
         board[start.first][start.second] = nullptr; //Remove the piece from the start
         board[end.first][end.second] = p; //Place the piece at the end
-        enPassant = POS(-1,-1);
-
-        Move["Start"] = QJsonArray({start.first, start.second});
-        Move["End"] = QJsonArray({end.first, end.second});
-        Actions_List.append(Move);
-        
+        enPassant = POS(-1,-1);        
     }
-    return Actions_List;
+    return Move;
 }
 
 

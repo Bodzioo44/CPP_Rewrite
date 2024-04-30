@@ -1,7 +1,6 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "Chess/piece.h"
 #include <array>
 #include <vector>
 
@@ -9,27 +8,15 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
+#include "Chess/piece.h"
+#include "Include/enums.h"
+
 const int BOARD_SIZE =  8;
 using ROW = array<Piece*, BOARD_SIZE>;
 using BOARD =  array<ROW, BOARD_SIZE>;
+using SquareState = Enums::SquareState;
 
 
-struct Actions
-{
-    vector<POS> Starting;
-    vector<POS> Ending;
-    vector<POS> Deleted;
-};
-
-
-//QjsonArray Action_list - vector of Actions
-//QjsonObject Action - json of actions looking like this: [starting, ending, deleted]
-
-enum class SquareState {
-    INVALID,
-    EMPTY,
-    TAKEN_BY_ENEMY,
-    TAKEN_BY_FRIENDLY};
 
 class Board
 {
@@ -38,7 +25,7 @@ class Board
         Board(const Board &board);
         ~Board();
         
-        QJsonArray Move(POS start, POS end); //Assuming that the move is valid!!! (checks are made inside game class)
+        QJsonObject Move(POS start, POS end); //Assuming that the move is valid!!! (checks are made inside game class)
         void PrintBoard() const; //Prints the board in terminal
         SquareState CheckSquare(POS pos, Color color) const; //Checks the state of the square
         Piece* GetPiece(POS pos) const; //Returns the piece pointer at the given position
