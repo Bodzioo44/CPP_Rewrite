@@ -13,16 +13,13 @@
 #include <QtCore/QObject>
 
 #include "Chess/game.h"
+#include "Include/enums.h"
 
 
-enum class GameType
-{
-    CHESS_2,
-    CHECKERS_2,
-    CHESS_4
-};
+
 
 using namespace Chess_2;
+using GameType = Enums::GameType;
 
 class GameWidget : public QWidget
 {
@@ -41,14 +38,14 @@ class GameWidget : public QWidget
         void DrawHighlight(QPainter &painter, MOVES squares);
 
         //Game-GameWidget communication
-        void SendMove(QJsonArray jsonMessage);
+        void SendMove(QJsonObject jsonMessage);
         string PopUpPromotionBox();
 
     private:
         
 
     signals:
-        void MoveMade(QJsonArray jsonMessage);
+        void MoveMade(QJsonObject jsonMessage);
 
     protected:
         constexpr static float scale = 0.75;

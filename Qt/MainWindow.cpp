@@ -42,6 +42,26 @@ MainWindow::MainWindow()
     connect(socket, &QTcpSocket::readyRead, this, &MainWindow::Message_Handler);
     connect(socket, &QTcpSocket::disconnected, this, &MainWindow::Disconnected);
     
+    // QFile API_Calls("Include/API_Calls.json");
+    // API_Calls.open(QIODevice::ReadOnly | QIODevice::Text);
+    // QString raw_api_calls;
+    // raw_api_calls = API_Calls.readAll();
+    // API_Calls.close();
+    // //cout << raw_api_calls.toStdString() << endl;
+    // QJsonDocument Json_api_calls = QJsonDocument::fromJson(raw_api_calls.toUtf8());
+    // cout << Json_api_calls.toJson().toStdString() << endl;
+    // QJsonObject json_api_calls = Json_api_calls.object();
+    // for (auto key : json_api_calls.keys())
+    // {
+    //     QJsonValue val = json_api_calls[key];
+    //     if (key == "Game_Update")
+    //     {
+    //         cout << val["type"].toString().toStdString() << endl;
+    //     }
+    // }
+    //QJsonObject API_Calls = Get_Api_Json_Obj();
+
+
 }
 
 MainWindow::~MainWindow()
@@ -50,13 +70,14 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::Received_Game_Update(QJsonArray jsonMessage)
+void MainWindow::Received_Game_Update(QJsonObject jsonMessage)
 {
     cout << "Received Game Update!" << endl;
-    for (QJsonValue value : jsonMessage)
-    {
-        SendData(value.toObject());
-    }
+
+    QJsonObject jsonMessageAPI;
+    jsonMessageAPI[GAME_UPDATE] = jsonMessage;
+    SendData(jsonMessageAPI);
+
 }
 
 /////////////////////////////////

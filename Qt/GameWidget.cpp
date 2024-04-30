@@ -12,7 +12,7 @@ void GameWidget::SetGame(GameType game_type_in, Color player_color_in)
 }
 
 
-void GameWidget::SendMove(QJsonArray jsonMessage)
+void GameWidget::SendMove(QJsonObject jsonMessage)
 {
     cout << "Emiting signal inside GameWidget!" << endl;
     emit MoveMade(jsonMessage);

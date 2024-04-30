@@ -3,6 +3,7 @@
 
 #include "ui_QtDesigner.h"
 #include "Qt/GameWidget.h"
+//#include "Include/Get_Api_Json.h"
 
 
 #include <QtNetwork/QTcpSocket>
@@ -13,6 +14,7 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonArray>
+#include <QtCore/QFile>
 
 #include <iostream>
 using namespace std;
@@ -44,7 +46,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
         void SendData(QJsonObject json);
 
     public slots:
-        void Received_Game_Update(QJsonArray jsonMessage);
+        void Received_Game_Update(QJsonObject jsonMessage);
 
     private:
         void Message_Input_Action();
