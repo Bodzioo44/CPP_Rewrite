@@ -41,27 +41,6 @@ MainWindow::MainWindow()
     socket = new QTcpSocket(this);
     connect(socket, &QTcpSocket::readyRead, this, &MainWindow::Message_Handler);
     connect(socket, &QTcpSocket::disconnected, this, &MainWindow::Disconnected);
-    
-    // QFile API_Calls("Include/API_Calls.json");
-    // API_Calls.open(QIODevice::ReadOnly | QIODevice::Text);
-    // QString raw_api_calls;
-    // raw_api_calls = API_Calls.readAll();
-    // API_Calls.close();
-    // //cout << raw_api_calls.toStdString() << endl;
-    // QJsonDocument Json_api_calls = QJsonDocument::fromJson(raw_api_calls.toUtf8());
-    // cout << Json_api_calls.toJson().toStdString() << endl;
-    // QJsonObject json_api_calls = Json_api_calls.object();
-    // for (auto key : json_api_calls.keys())
-    // {
-    //     QJsonValue val = json_api_calls[key];
-    //     if (key == "Game_Update")
-    //     {
-    //         cout << val["type"].toString().toStdString() << endl;
-    //     }
-    // }
-    //QJsonObject API_Calls = Get_Api_Json_Obj();
-
-
 }
 
 MainWindow::~MainWindow()
@@ -75,7 +54,7 @@ void MainWindow::Received_Game_Update(QJsonObject jsonMessage)
     cout << "Received Game Update!" << endl;
 
     QJsonObject jsonMessageAPI;
-    jsonMessageAPI[GAME_UPDATE] = jsonMessage;
+    jsonMessageAPI[API::GAME_UPDATE] = jsonMessage;
     SendData(jsonMessageAPI);
 
 }
@@ -86,18 +65,90 @@ void MainWindow::Received_Game_Update(QJsonObject jsonMessage)
 
 void MainWindow::Message_Handler()
 {
-    QByteArray data = socket->readAll(); //receive raw string from server
-    QJsonDocument doc = QJsonDocument::fromJson(data); //serialize it to json document
+    QByteArray data = socket->readAll(); //receive raw string from the socket
+    QJsonDocument doc = QJsonDocument::fromJson(data); //serialize it to a doc
     QJsonObject json = doc.object(); //get the json object
+
     QString strJson(doc.toJson(QJsonDocument::Indented)); //convert it to string
-    cout << "Received: " << strJson.toStdString() << endl;
+    cout << "Received: " << strJson.toStdString() << endl; //print it out for debugging
+
+    for (QJsonObject::const_iterator it = json.begin(); it != json.end(); ++it)
+    {
+        QString key = it.key();
+
+        if (key == API::CREATE_LOBBY)
+        {
+            Stacked_Widget->setCurrentWidget(Lobby_Info_Page);
+            QJsonObject value = it.value().toObject();
+            Set_Lobby_Info_Tree(value);
+
+        }
+        else if (key == API::JOIN_LOBBY)
+        {
+            Stacked_Widget->setCurrentWidget(Lobby_Info_Page);
+            QJsonObject value = it.value().toObject();
+            Set_Lobby_Info_Tree(value);
+        }
+        else if (key == API::LEAVE_LOBBY)
+        {
+            Stacked_Widget->setCurrentWidget(Lobby_List_Page);
+            Update_Lobby_List_Button_Action();  
+        
+        }
+        else if (key == API::UPDATE_LOBBY)
+        {
+            cout << "inside update lobby key";
+            QJsonObject value = it.value().toObject();
+            Set_Lobby_Info_Tree(value);
+        }
+        else if (key == API::GAME_UPDATE)
+        {
+            cout << "inside game update key" << endl;
+            game_widget->ReceiveUpdate(it.value().toObject());
+        }
+        else if (key == API::MESSAGE)
+        {
+            QJsonArray value = it.value().toArray();
+            for (auto i : value)
+            {
+                cout << i.toString().toStdString() << endl;
+            }
+        }
+        else if (key == API::UPDATE_LOBBY_LIST)
+        {
+            QJsonObject value = it.value().toObject();
+            Set_Lobby_List_Tree(value);
+        }
+        
+        // else if (key == API::DISCONNECT)
+        // {
+        //     cout << "Disconnected from the server!" << endl;
+        //     Stacked_Widget->setCurrentWidget(Connection_Page);
+        // }
+        else if (key == API::START_LOBBY)
+        {
+            cout << "Game has started!" << endl;
+            Stacked_Widget->setCurrentWidget(Game_Page);
+            game_widget = new GameWidget();
+            game_widget->SetGame(GameType::CHESS_2, static_cast<Color>(it.value().toInt()));
+            Game_Page_Layout->addWidget(game_widget);
+            connect(game_widget, &GameWidget::MoveMade, this, &MainWindow::Received_Game_Update);
+        }
+
+        else
+        {
+            cout << "Unknown API call: " << key.toStdString() << endl;
+        }
+    }
+
+
 }
 
 void MainWindow::SendData(QJsonObject json)
 {
     QJsonDocument doc(json);
     QByteArray data = doc.toJson();
-    cout << "Sending: " << data.toStdString() << endl;
+    cout << "Sending: " << data.toStdString() << "With length of: " << std::size(data) << endl;
     socket->write(data);
 }
 
@@ -116,14 +167,18 @@ void MainWindow::Online_Button_Action()
     socket->connectToHost(IP_Input_Box->text(), 4444);
     if (socket->waitForConnected(5000))
     {
-        cout << "Connected!" << endl;
+        cout << "Succesfully connected to the server!" << endl;
+        SendData(QJsonObject{{API::ASSIGN_NAME, Name_Input_Box->text()}});
+        //FIXME: Wait for confirmation? to avoid screen flickering on disconnect.
+        //Also rerequest data after disconnect.
         Stacked_Widget->setCurrentWidget(Lobby_List_Page);
     }
     else
     {
         cout << "Failed to connect! Check if Ip is correct!" << endl;
     }
-    Stacked_Widget->setCurrentWidget(Connection_Page);
+    //Stacked_Widget->setCurrentWidget(Connection_Page);
+    //Stacked_Widget->setCurrentWidget(Lobby_List_Page);
 }
 
 void MainWindow::Offline_Button_Action()
@@ -153,7 +208,7 @@ void MainWindow::Join_Lobby_Button_Action()
     if (!selectedItems.isEmpty())
     {
         int lobby_id = selectedItems[0]->text(0).toInt();
-        QJsonObject jsonMessage {{JOIN_LOBBY, lobby_id}};
+        QJsonObject jsonMessage {{API::JOIN_LOBBY, lobby_id}};
         SendData(jsonMessage);
     }
     else
@@ -164,7 +219,7 @@ void MainWindow::Join_Lobby_Button_Action()
 
 void MainWindow::Update_Lobby_List_Button_Action()
 {
-    QJsonObject jsonMessage {{REQUEST_LOBBY_LIST, "0"}};
+    QJsonObject jsonMessage {{API::REQUEST_LOBBY_LIST, "0"}};
     SendData(jsonMessage);
     std::cout << "Update Lobby List Button Pressed" << std::endl;
 }
@@ -175,21 +230,21 @@ void MainWindow::Update_Lobby_List_Button_Action()
 
 void MainWindow::Checkers_2_Button_Action()
 {
-    QJsonObject jsonMessage {{CREATE_LOBBY, (int)GameType::CHECKERS_2}};
+    QJsonObject jsonMessage {{API::CREATE_LOBBY, (int)GameType::CHECKERS_2}};
     SendData(jsonMessage);
     std::cout << "Checkers 2 Button Pressed" << std::endl;
 }
 
 void MainWindow::Chess_2_Button_Action()
 {
-    QJsonObject jsonMessage {{CREATE_LOBBY, (int)GameType::CHESS_2}};
+    QJsonObject jsonMessage {{API::CREATE_LOBBY, (int)GameType::CHESS_2}};
     SendData(jsonMessage);
     std::cout << "Chess 2 Button Pressed" << std::endl;
 }
 
 void MainWindow::Chess_4_Button_Action()
 {
-    QJsonObject jsonMessage {{CREATE_LOBBY, (int)GameType::CHESS_4}};
+    QJsonObject jsonMessage {{API::CREATE_LOBBY, (int)GameType::CHESS_4}};
     SendData(jsonMessage);
     std::cout << "Chess 4 Button Pressed" << std::endl;
 }
@@ -206,14 +261,14 @@ void MainWindow::Exit_Lobby_Creation_Button_Action()
 
 void MainWindow::Leave_Lobby_Button_Action()
 {
-    QJsonObject jsonMessage {{LEAVE_LOBBY, "0"}};
+    QJsonObject jsonMessage {{API::LEAVE_LOBBY, "0"}};
     SendData(jsonMessage);
     std::cout << "Leave Lobby Button Pressed" << std::endl;
 }
 
 void MainWindow::Start_Lobby_Button_Action()
 {
-    QJsonObject jsonMessage {{START_LOBBY, "0"}};
+    QJsonObject jsonMessage {{API::START_LOBBY, "0"}};
     SendData(jsonMessage);
     std::cout << "Start Lobby Button Pressed" << std::endl;
 }
@@ -224,7 +279,7 @@ void MainWindow::Kick_Player_Button_Action()
     if (!selectedItems.isEmpty())
     {
         int player_name = selectedItems[0]->text(0).toInt();
-        QJsonObject jsonMessage {{KICK_PLAYER, player_name}};
+        QJsonObject jsonMessage {{API::KICK_PLAYER, player_name}};
         SendData(jsonMessage);
     }
     else
@@ -252,13 +307,13 @@ void MainWindow::Message_Input_Action()
         QWidget* current_widget = Chat_Tab_Widget->currentWidget();
         if (current_widget == Global_Chat_Tab)
         {
-            QJsonObject jsonMessage {{GLOBAL_MESSAGE, message}};
+            QJsonObject jsonMessage {{API::GLOBAL_MESSAGE, message}};
             cout << "Sending: " << endl;
             SendData(jsonMessage);
         }
         else if (current_widget == Lobby_Chat_Tab)
         {
-            QJsonObject jsonMessage {{LOBBY_MESSAGE, message}};
+            QJsonObject jsonMessage {{API::LOBBY_MESSAGE, message}};
             //cout << "Sending: " << endl;
             SendData(jsonMessage);
         }
@@ -266,5 +321,52 @@ void MainWindow::Message_Input_Action()
     else
     {
         cout << "Message is empty!" << endl;
+    }
+}
+
+
+
+void MainWindow::Set_Lobby_List_Tree(QJsonObject json)
+{
+    Lobby_List_Tree_Widget->clear();   
+
+    for (auto key : json.keys())
+    {
+        QTreeWidgetItem* header = new QTreeWidgetItem();
+
+        header->setText(0, key);
+        QJsonObject lobby_info = json[key].toObject();
+
+        //TODO: Replace "Player" section with fancy widget that can actually display all the players?
+        header->setText(1, QString::number(lobby_info["Slots"].toInt()));
+        header->setText(2, lobby_info["GameType"].toString());
+        header->setText(3, lobby_info["Status"].toBool() ? "Game has already started." : "Waiting for more players");
+
+        Lobby_List_Tree_Widget->addTopLevelItem(header);
+    }
+}
+
+
+void MainWindow::Set_Lobby_Info_Tree(QJsonObject json)
+{
+    Lobby_Info_Tree_Widget->clear();
+
+    //json["Slots"] = 2;
+    Lobby_Players_Label->setText("Max Players: " + QString::number(json["Slots"].toInt()));
+    cout << typeid(json["Slots"]).name() << endl;
+    Lobby_Type_Label->setText("Type: " + json["GameType"].toString());
+    Lobby_ID_Label->setText("Lobby ID: " + QString::number(json["Lobby_ID"].toInt()));
+    
+
+    for (auto key : json["Players"].toObject().keys())
+    {
+        QTreeWidgetItem* header = new QTreeWidgetItem();
+
+        header->setText(0, key);
+        header->setText(1, json["Players"].toObject()[key].toArray()[1].toString());
+        //FIXME: Player values are passed inside array, fix it.
+        //header->setText(2, json["Status"].toString());
+
+        Lobby_Info_Tree_Widget->addTopLevelItem(header);
     }
 }

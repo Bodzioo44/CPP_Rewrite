@@ -1,13 +1,32 @@
+
+-------------- GENERAL -----------------------
+Fix the includes, namespaces etc.
+
+
+------------ BOARD --------------
+add method that returns visual representation of the board? array of image paths and nullptrs?
+
+----------- GAME ----------------
+
+Create Parent Class of the game so multiple games can inherit from it?
+make select/getboard virtuals?
+
+
+Remove "type" key from the Move json? check if "additional_data" key is empty? DONE
+Remove useless "Game_Update" Key from Game updates DONE
+change Game::GetBoard() to pass by value, not by reference. (it fucks with the pointers to pieces inside? not sure why? (Image is a NULL Image)) REVERSED?
+Move the Promotion Check inside board? leave just the Popup box call.
+Change promotion check to a single tile check after each select? no need to iterate
+
+----------- GAME WIDGET ---------------
+
+Fix GameWidget methods permissions
+Change game pointer to just a Game object? (nah this way it has to be initialized inside constructor i think). Change it to a smart pointer?
+Switch whole Game-GameWidget communication to async?
+
+----------------- MAIN WINDOW ------------------
+
 Only use 1 game widget initialized in the MainWindow constructor, and add methods for removing/starting games.
 connect the slot only once inside constructor.
 
-Fix GameWidget permissions
 
-Check if piece type enum can be more usefull? //Nah its useless
-
-Merge "Removed" key with others?
-
-While processing game history, only change turn after "Move" key (ignore promotions)
-
-
-Check if ReceiveUpdate is working (after server is up.)

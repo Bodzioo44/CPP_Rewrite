@@ -3,6 +3,7 @@
 
 #include "ui_QtDesigner.h"
 #include "Qt/GameWidget.h"
+#include "Include/enums.h"
 //#include "Include/Get_Api_Json.h"
 
 
@@ -21,17 +22,6 @@ using namespace std;
 
 
 
-const QString JOIN_LOBBY = "Join_Lobby";
-const QString CREATE_LOBBY = "Create_Lobby";
-const QString LEAVE_LOBBY = "Leave_Lobby";
-const QString REQUEST_LOBBY_LIST = "Request_Lobby_List";
-const QString UPDATE_LOBBY_LIST = "Update_Lobby";
-const QString KICK_PLAYER = "Kick_Player";  
-const QString START_LOBBY = "Start_Lobby";
-const QString MESSAGE = "Message";
-const QString LOBBY_MESSAGE = "Lobby_Message";
-const QString GLOBAL_MESSAGE = "Global_Message";
-const QString GAME_UPDATE = "Game_Update";
 
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
@@ -66,6 +56,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
         void Leave_Lobby_Button_Action();
         void Start_Lobby_Button_Action();
         void Kick_Player_Button_Action();
+
+        void Set_Lobby_List_Tree(QJsonObject);
+        void Set_Lobby_Info_Tree(QJsonObject);
 
 
         QTcpSocket* socket;

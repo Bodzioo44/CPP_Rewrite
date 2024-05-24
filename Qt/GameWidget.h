@@ -41,18 +41,16 @@ class GameWidget : public QWidget
         void SendMove(QJsonObject jsonMessage);
         string PopUpPromotionBox();
 
+        void ReceiveUpdate(QJsonObject jsonMessage);
+
     private:
-        
+        constexpr static float scale = 0.75; //Scale of the pieces
+        int square_size;
+        GameType game_type;
+        Game* game;
 
     signals:
         void MoveMade(QJsonObject jsonMessage);
-
-    protected:
-        constexpr static float scale = 0.75;
-        int square_size;
-        GameType game_type;
-        //Add shared class for more games later on?
-        Game* game;
 };
 
 

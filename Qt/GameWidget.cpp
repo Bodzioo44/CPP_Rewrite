@@ -12,13 +12,21 @@ void GameWidget::SetGame(GameType game_type_in, Color player_color_in)
 }
 
 
+void GameWidget::ReceiveUpdate(QJsonObject jsonMessage)
+{
+    cout << "Receiving update inside GameWidget!" << endl;
+    //game->ReceiveUpdate(jsonMessage[API::GAME_UPDATE].toObject());
+    game->ReceiveUpdate(jsonMessage);
+    update();
+}
+
+
 void GameWidget::SendMove(QJsonObject jsonMessage)
 {
     cout << "Emiting signal inside GameWidget!" << endl;
     emit MoveMade(jsonMessage);
 }
 
-//TODO Fix the damn scaling, so it keep ratio, and stays a square!
 void GameWidget::resizeEvent(QResizeEvent*)
 {
     //QWidget::resizeEvent(event);

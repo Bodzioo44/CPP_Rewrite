@@ -51,6 +51,7 @@ QJsonObject Board::Move(POS start, POS end)
 {
 
     Piece* p = board[start.first][start.second];
+    cout << "Moving " << p->GetName() << " from " << start.first << ", " << start.second << " to " << end.first << ", " << end.second << endl;
 
     QJsonObject Move;
     Move["fromX"] = start.first;
@@ -100,7 +101,6 @@ QJsonObject Board::Move(POS start, POS end)
         if (abs(start.first - end.first) == 2) //if pawn moved by 2 squares forward, set en passant position
         {
             Move["type"] = "normal";
-
             enPassant = end;
             p->FirstMove();
             board[end.first][end.second] = p;
@@ -115,7 +115,6 @@ QJsonObject Board::Move(POS start, POS end)
             }
             else if (POS(end.first+1, end.second) == GetEnPassant()) //en passant check for white
             {
-
                 NukeTile(POS(end.first + 1, end.second));
                 Move["type"] = "enpassant";
             }
@@ -143,6 +142,7 @@ QJsonObject Board::Move(POS start, POS end)
         board[end.first][end.second] = p; //Place the piece at the end
         enPassant = POS(-1,-1);        
     }
+    cout << "Move finished" << endl;
     return Move;
 }
 

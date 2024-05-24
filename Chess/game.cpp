@@ -1,4 +1,3 @@
-
 #include "Chess/game.h"
 #include "Qt/GameWidget.h"
 
@@ -14,10 +13,28 @@ Game::Game(Color player_color_in, GameWidget* game_widget_in)
     game_widget = game_widget_in;
 }
 
-//TODO: Fix this
-void Game::ReceiveUpdate(QJsonObject jsonMessage)
+void Game::ReceiveUpdate(QJsonObject Move)
 {
+    int fromX = Move["fromX"].toInt();
+    int fromY = Move["fromY"].toInt();
+    int toX = Move["toX"].toInt();
+    int toY = Move["toY"].toInt();
+    string type = Move["type"].toString().toStdString();
+    string additional_data = Move["additional_data"].toString().toStdString();
+    //cout << "From: " << fromX << ", " << fromY << " To: " << toX << ", " << toY << " Type: " << type << endl;
+    POS start = POS(fromX, fromY);
+    POS end = POS(toX, toY);
 
+    if (type == "promotion") //Remove type key? just check if additional_data is empty?
+    {
+        board.Move(start, end);
+        board.Promote(end, additional_data);
+    }
+    else
+    {
+        board.Move(start, end);
+    }
+    ChangeTurn();
 }
 
 void Game::Select(POS pos)
@@ -26,7 +43,7 @@ void Game::Select(POS pos)
     int col = pos.second;
     Piece* current_square = board.GetPiece(pos);
 
-    if (selected == nullptr && current_square != nullptr)
+    if (selected == nullptr && current_square != nullptr && turn == player_color)
     {
         if (current_square->GetColor() != turn)
         {
@@ -57,6 +74,7 @@ void Game::Select(POS pos)
             }
         }
     }
+    else if (player_color != turn) {std::cout << "Not your turn" << endl;}
     else if (selected != nullptr && selected == current_square)
     {
         cout << "Deselected: " << selected->Info() << endl;
@@ -75,11 +93,9 @@ void Game::Select(POS pos)
                 Moves["type"] = "promotion";
                 Moves["additional_data"] = QString::fromStdString(Promotion);
             }
-            
-            QJsonObject Key_Moves;
-            Key_Moves["Game_Update"] = Moves;
-            game_widget->SendMove(Key_Moves);
-
+            //QJsonObject Key_Moves;
+            //Key_Moves["Game_Update"] = Moves;
+            game_widget->SendMove(Moves);
             highlighted_squares.clear();
             ChangeTurn();
             selected = nullptr;
@@ -102,7 +118,6 @@ string Game::CheckForPromotion()
         else if (board.GetPiece(POS(7, i)) != nullptr && board.GetPiece(POS(7, i))->GetName() == "Pawn")
         {
             string promotion = game_widget->PopUpPromotionBox();
-            cout << "We got here" << endl;
             board.Promote(POS(7, i), promotion);
             return promotion;
         }
@@ -112,7 +127,7 @@ string Game::CheckForPromotion()
 }
 
 
-MOVES Game::GetHighlightedSquares()
+MOVES Game::GetHighlightedSquares() const
 {
     return highlighted_squares;
 }
@@ -127,6 +142,7 @@ void Game::ChangeTurn()
     {
         turn = Color::WHITE;
     }
+    cout << "Turn Changed!" << endl;
 }
 
 
