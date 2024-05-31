@@ -63,6 +63,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 
         QTcpSocket* socket;
         GameWidget* game_widget;
+
+        QString Int_to_String(int i);
 };
 
 

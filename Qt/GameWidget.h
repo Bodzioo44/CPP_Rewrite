@@ -11,6 +11,7 @@
 #include <QtGui/QImage>
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
 
 #include "Chess/game.h"
 #include "Include/enums.h"
@@ -42,6 +43,7 @@ class GameWidget : public QWidget
         string PopUpPromotionBox();
 
         void ReceiveUpdate(QJsonObject jsonMessage);
+        
 
     private:
         constexpr static float scale = 0.75; //Scale of the pieces

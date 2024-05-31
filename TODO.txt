@@ -29,4 +29,5 @@ Switch whole Game-GameWidget communication to async?
 Only use 1 game widget initialized in the MainWindow constructor, and add methods for removing/starting games.
 connect the slot only once inside constructor.
 
-
+Fix the Status bool display inside lobby info page
+Change Int_to_string to some kind of Color/String map?

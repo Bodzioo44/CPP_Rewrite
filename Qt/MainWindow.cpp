@@ -135,6 +135,17 @@ void MainWindow::Message_Handler()
             connect(game_widget, &GameWidget::MoveMade, this, &MainWindow::Received_Game_Update);
         }
 
+        else if (key == API::GLOBAL_MESSAGE)
+        {
+            Global_Chat_Text_Edit->append(it.value().toString());
+            Message_Input_Box->clear();
+        }
+        else if (key == API::LOBBY_MESSAGE)
+        {
+            Lobby_Chat_Text_Edit->append(it.value().toString());
+            Message_Input_Box->clear();
+        }
+
         else
         {
             cout << "Unknown API call: " << key.toStdString() << endl;
@@ -340,7 +351,7 @@ void MainWindow::Set_Lobby_List_Tree(QJsonObject json)
         //TODO: Replace "Player" section with fancy widget that can actually display all the players?
         header->setText(1, QString::number(lobby_info["Slots"].toInt()));
         header->setText(2, lobby_info["GameType"].toString());
-        header->setText(3, lobby_info["Status"].toBool() ? "Game has already started." : "Waiting for more players");
+        header->setText(3, lobby_info["Status"].toBool() ? "Game has already started." : "Waiting for more players"); 
 
         Lobby_List_Tree_Widget->addTopLevelItem(header);
     }
@@ -357,16 +368,28 @@ void MainWindow::Set_Lobby_Info_Tree(QJsonObject json)
     Lobby_Type_Label->setText("Type: " + json["GameType"].toString());
     Lobby_ID_Label->setText("Lobby ID: " + QString::number(json["Lobby_ID"].toInt()));
     
+    //json["Players"]["Player1"] = ["Player1", "White"]
 
-    for (auto key : json["Players"].toObject().keys())
+    for (auto key : json["Players"].toObject().keys()) //each iteration is one player/one slot
     {
-        QTreeWidgetItem* header = new QTreeWidgetItem();
+        QTreeWidgetItem* header = new QTreeWidgetItem(); //this one gets auto deleted when parent is deleted or cleared
 
-        header->setText(0, key);
-        header->setText(1, json["Players"].toObject()[key].toArray()[1].toString());
-        //FIXME: Player values are passed inside array, fix it.
-        //header->setText(2, json["Status"].toString());
+        QJsonArray value = json["Players"].toObject()[key].toArray();
+        header->setText(0, value[0].toString());
+        header->setText(1, Int_to_String(value[1].toInt()));
 
         Lobby_Info_Tree_Widget->addTopLevelItem(header);
+    }
+}
+
+
+QString MainWindow::Int_to_String(int i)
+{
+    switch(i)
+    {
+        case 0: return "White";
+        case 1: return  "Black";
+        case 2: return "Red";
+        case 3: return "Blue";
     }
 }
