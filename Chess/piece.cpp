@@ -203,10 +203,10 @@ void Pawn::AssignColorValues()
     switch (color)
     {
         case Color::WHITE:
-            path = "img/white_pawn.png";
+            path = "../img/white_pawn.png";
             break;
         case Color::BLACK:
-            path = "img/black_pawn.png";
+            path = "../img/black_pawn.png";
             break;
     }
 
@@ -245,10 +245,10 @@ void Rook::AssignColorValues()
     switch (color)
     {
         case Color::WHITE:
-            path = "img/white_rook.png";
+            path = "../img/white_rook.png";
             break;
         case Color::BLACK:
-            path = "img/black_rook.png";
+            path = "../img/black_rook.png";
             break;
     }
 }
@@ -272,10 +272,10 @@ void Bishop::AssignColorValues()
     switch (color)
     {
         case Color::WHITE:
-            path = "img/white_bishop.png";
+            path = "../img/white_bishop.png";
             break;
         case Color::BLACK:
-            path = "img/black_bishop.png";
+            path = "../img/black_bishop.png";
             break;
     }
 }
@@ -301,10 +301,10 @@ void Queen::AssignColorValues()
     switch (color)
     {
         case Color::WHITE:
-            path = "img/white_queen.png";
+            path = "../img/white_queen.png";
             break;
         case Color::BLACK:
-            path = "img/black_queen.png";
+            path = "../img/black_queen.png";
             break;
     }
 }
@@ -340,10 +340,10 @@ void Knight::AssignColorValues()
     switch (color)
     {
         case Color::WHITE:
-            path = "img/white_knight.png";
+            path = "../img/white_knight.png";
             break;
         case Color::BLACK:
-            path = "img/black_knight.png";
+            path = "../img/black_knight.png";
             break;
     }
 }
@@ -423,10 +423,10 @@ void King::AssignColorValues()
     switch (color)
     {
         case Color::WHITE:
-            path = "img/white_king.png";
+            path = "../img/white_king.png";
             break;
         case Color::BLACK:
-            path = "img/black_king.png";
+            path = "../img/black_king.png";
             break;
     }
 }

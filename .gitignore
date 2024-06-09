@@ -10,3 +10,4 @@ CPP_Rewrite
 Compile_Server.sh
 moc*
 Client
+build
