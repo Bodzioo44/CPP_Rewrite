@@ -16,6 +16,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonArray>
 #include <QtCore/QFile>
+#include <QtCore/QThread>
 
 #include <iostream>
 using namespace std;

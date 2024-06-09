@@ -4,7 +4,7 @@ Fix the includes, namespaces etc.
 
 
 ------------ BOARD --------------
-add method that returns visual representation of the board? array of image paths and nullptrs?
+add method that returns visual representation of the board? array of image paths and nullptrs? (to avoid passing whole object)
 
 ----------- GAME ----------------
 
@@ -31,3 +31,4 @@ connect the slot only once inside constructor.
 
 Fix the Status bool display inside lobby info page
 Change Int_to_string to some kind of Color/String map?
+Await API::ASSIGN_NAME before connecting (switching to lobby_list widget tree)??

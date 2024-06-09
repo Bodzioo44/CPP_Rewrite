@@ -106,6 +106,16 @@ void MainWindow::Message_Handler()
             cout << "inside game update key" << endl;
             game_widget->ReceiveUpdate(it.value().toObject());
         }
+        else if (key == API::GAME_HISTORY)
+        {
+            Stacked_Widget->setCurrentWidget(Game_Page);
+            for (QJsonValue value : it.value().toArray())
+            {
+                game_widget->ReceiveUpdate(value.toObject());
+                QThread::msleep(1000);
+
+            }
+        }
         else if (key == API::MESSAGE)
         {
             QJsonArray value = it.value().toArray();
@@ -183,6 +193,8 @@ void MainWindow::Online_Button_Action()
         //FIXME: Wait for confirmation? to avoid screen flickering on disconnect.
         //Also rerequest data after disconnect.
         Stacked_Widget->setCurrentWidget(Lobby_List_Page);
+        Lobby_List_Tree_Widget->clear();   
+
     }
     else
     {
