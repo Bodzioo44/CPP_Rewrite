@@ -123,6 +123,22 @@ void MainWindow::Message_Handler()
 
             }
         }
+        else if (key == API::RECONNECT)
+        {
+            int Start_Lobby = it.value().toObject()[API::START_LOBBY].toInt();
+            QJsonArray Game_History = it.value().toObject()[API::GAME_HISTORY].toArray();
+
+            Stacked_Widget->setCurrentWidget(Game_Page);
+            game_widget->SetGame(GameType::CHESS_2, static_cast<Color>(Start_Lobby));
+
+            for (QJsonValue value : Game_History)
+            {
+                game_widget->ReceiveUpdate(value.toObject());
+                QThread::msleep(1000);
+
+            }
+
+        }
         else if (key == API::MESSAGE)
         {
             QJsonArray value = it.value().toArray();

@@ -53,6 +53,7 @@ namespace API
     const QString DISCONNECT = "Disconnect";
     const QString UPDATE_LOBBY = "Update_Lobby";
     const QString GAME_HISTORY = "Game_History";
+    const QString RECONNECT = "Reconnect";
 }
 
 

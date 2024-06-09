@@ -8,7 +8,7 @@ add method that returns visual representation of the board? array of image paths
 
 ----------- GAME ----------------
 
-Create Parent Class of the game so multiple games can inherit from it?
+Create Parent Class of the game so multiple games can inherit from it in the future?
 make select/getboard virtuals?
 
 
@@ -26,8 +26,8 @@ Switch whole Game-GameWidget communication to async?
 
 ----------------- MAIN WINDOW ------------------
 
-Only use 1 game widget initialized in the MainWindow constructor, and add methods for removing/starting games.
-connect the slot only once inside constructor.
+Only use 1 game widget initialized in the MainWindow constructor, and add methods for removing/starting games. DONE
+connect the slot only once inside constructor. DONE
 
 Fix the Status bool display inside lobby info page
 Change Int_to_string to some kind of Color/String map?
