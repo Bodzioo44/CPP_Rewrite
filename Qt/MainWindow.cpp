@@ -16,7 +16,7 @@ MainWindow::MainWindow()
 
     //IP_Input_Box->setText("Bodzioo44.ddns.net");
     IP_Input_Box->setText("127.0.0.1");
-    Name_Input_Box->setText("Player1");
+    Name_Input_Box->setText("Player");
 
     //Chat Box
     connect(Message_Input_Box, &QLineEdit::returnPressed, this, &MainWindow::Message_Input_Action);
@@ -41,11 +41,18 @@ MainWindow::MainWindow()
     socket = new QTcpSocket(this);
     connect(socket, &QTcpSocket::readyRead, this, &MainWindow::Message_Handler);
     connect(socket, &QTcpSocket::disconnected, this, &MainWindow::Disconnected);
+
+    //Game Stuff
+    game_widget = new GameWidget(this);
+    Game_Page_Layout->addWidget(game_widget);
+    connect(game_widget, &GameWidget::MoveMade, this, &MainWindow::Received_Game_Update);
 }
 
 MainWindow::~MainWindow()
 {
-    delete socket;
+    //delete socket;
+    //delete game_widget;
+    //socket and game_widget should auto delete themselves when the parent is deleted
 }
 
 
@@ -137,12 +144,9 @@ void MainWindow::Message_Handler()
         // }
         else if (key == API::START_LOBBY)
         {
-            cout << "Game has started!" << endl;
+            //cout << "Game has started!" << endl;
             Stacked_Widget->setCurrentWidget(Game_Page);
-            game_widget = new GameWidget();
             game_widget->SetGame(GameType::CHESS_2, static_cast<Color>(it.value().toInt()));
-            Game_Page_Layout->addWidget(game_widget);
-            connect(game_widget, &GameWidget::MoveMade, this, &MainWindow::Received_Game_Update);
         }
 
         else if (key == API::GLOBAL_MESSAGE)
@@ -206,11 +210,8 @@ void MainWindow::Online_Button_Action()
 
 void MainWindow::Offline_Button_Action()
 {   
-    Stacked_Widget->setCurrentWidget(Game_Page);
-    game_widget = new GameWidget();
-    game_widget->SetGame(GameType::CHESS_2, Color::WHITE);
-    Game_Page_Layout->addWidget(game_widget);
-    connect(game_widget, &GameWidget::MoveMade, this, &MainWindow::Received_Game_Update);
+    //Stacked_Widget->setCurrentWidget(Game_Page);
+    //game_widget->SetGame(GameType::CHESS_2, Color::WHITE);
 }
 
 
@@ -360,7 +361,7 @@ void MainWindow::Set_Lobby_List_Tree(QJsonObject json)
         header->setText(0, key);
         QJsonObject lobby_info = json[key].toObject();
 
-        //TODO: Replace "Player" section with fancy widget that can actually display all the players?
+        //TODO: Replace "Player" section with fancy custom widget that can actually display all the players?
         header->setText(1, QString::number(lobby_info["Slots"].toInt()));
         header->setText(2, lobby_info["GameType"].toString());
         header->setText(3, lobby_info["Status"].toBool() ? "Game has already started." : "Waiting for more players"); 
@@ -368,7 +369,6 @@ void MainWindow::Set_Lobby_List_Tree(QJsonObject json)
         Lobby_List_Tree_Widget->addTopLevelItem(header);
     }
 }
-
 
 void MainWindow::Set_Lobby_Info_Tree(QJsonObject json)
 {
@@ -394,7 +394,7 @@ void MainWindow::Set_Lobby_Info_Tree(QJsonObject json)
     }
 }
 
-
+//is there a better way to convert enum to string? map?
 QString MainWindow::Int_to_String(int i)
 {
     switch(i)

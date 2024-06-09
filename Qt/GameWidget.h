@@ -27,7 +27,7 @@ class GameWidget : public QWidget
     Q_OBJECT
 
     public:
-        GameWidget();
+        GameWidget(QWidget* parent = nullptr);
         ~GameWidget();
         void SetGame(GameType game_type, Color player_color);
         //TODO make Draw methods depend on the board, its 8x8 rn.

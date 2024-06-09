@@ -2,15 +2,18 @@
 
 
 //TODO add check if the game exists? bound game exists to the widget? idk
-GameWidget::GameWidget() {}
+GameWidget::GameWidget(QWidget* parent) : QWidget(parent) 
+{
+    game = nullptr;
+}
 GameWidget::~GameWidget() {delete game;}
 
 void GameWidget::SetGame(GameType game_type_in, Color player_color_in)
 {
     game_type = game_type_in;
+    if (game != nullptr) {delete game;}
     game = new Game(player_color_in, this);
 }
-
 
 void GameWidget::ReceiveUpdate(QJsonObject jsonMessage)
 {
