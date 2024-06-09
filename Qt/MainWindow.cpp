@@ -50,9 +50,13 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
-    //delete socket;
+
+    //apparently QTcpSocket doesnt inherit form QWidget, and because of that it doesnt get deleted alongside parent?
+    //doesnt seem right? anyway, deleting the socket here prevents Segmentation fault (core dumped) while closing the app
+    delete socket;
     //delete game_widget;
     //socket and game_widget should auto delete themselves when the parent is deleted
+
 }
 
 
@@ -119,7 +123,7 @@ void MainWindow::Message_Handler()
             for (QJsonValue value : it.value().toArray())
             {
                 game_widget->ReceiveUpdate(value.toObject());
-                QThread::msleep(1000);
+                //QThread::msleep(1000);
 
             }
         }
@@ -419,5 +423,6 @@ QString MainWindow::Int_to_String(int i)
         case 1: return  "Black";
         case 2: return "Red";
         case 3: return "Blue";
+        default: return "Compiler is crying";
     }
 }
