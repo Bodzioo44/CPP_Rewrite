@@ -14,8 +14,8 @@ MainWindow::MainWindow()
     Lobby_Info_Page->setLayout(Lobby_Info_Page_Layout);
     Game_Page->setLayout(Game_Page_Layout);
 
-    //IP_Input_Box->setText("Bodzioo44.ddns.net");
-    IP_Input_Box->setText("127.0.0.1");
+    IP_Input_Box->setText("Bodzioo44.ddns.net");
+    //IP_Input_Box->setText("127.0.0.1");
     Name_Input_Box->setText("Player");
 
     //Chat Box
