@@ -14,8 +14,8 @@ MainWindow::MainWindow()
     Lobby_Info_Page->setLayout(Lobby_Info_Page_Layout);
     Game_Page->setLayout(Game_Page_Layout);
 
-    IP_Input_Box->setText("Bodzioo44.ddns.net");
-    //IP_Input_Box->setText("127.0.0.1");
+    //IP_Input_Box->setText("Bodzioo44.ddns.net");
+    IP_Input_Box->setText("127.0.0.1");
     Name_Input_Box->setText("Player");
 
     //Chat Box
@@ -46,6 +46,11 @@ MainWindow::MainWindow()
     game_widget = new GameWidget(this);
     Game_Page_Layout->addWidget(game_widget);
     connect(game_widget, &GameWidget::MoveMade, this, &MainWindow::Received_Game_Update);
+
+    Offline_Button->setEnabled(false);
+    Kick_Player_Button->setEnabled(false);
+    Chess_4_Button->setEnabled(false);
+    Checkers_2_Button->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -81,7 +86,7 @@ void MainWindow::Message_Handler()
     QJsonObject json = doc.object(); //get the json object
 
     QString strJson(doc.toJson(QJsonDocument::Indented)); //convert it to string
-    cout << "Received: " << strJson.toStdString() << endl; //print it out for debugging
+    //cout << "Received message with length " << data.size() << ": " << strJson.toStdString() << endl; //print it out for debugging
 
     for (QJsonObject::const_iterator it = json.begin(); it != json.end(); ++it)
     {
@@ -138,7 +143,7 @@ void MainWindow::Message_Handler()
             for (QJsonValue value : Game_History)
             {
                 game_widget->ReceiveUpdate(value.toObject());
-                QThread::msleep(1000);
+                //QThread::msleep(1000);
 
             }
 
@@ -193,7 +198,7 @@ void MainWindow::SendData(QJsonObject json)
 {
     QJsonDocument doc(json);
     QByteArray data = doc.toJson();
-    cout << "Sending: " << data.toStdString() << "With length of: " << std::size(data) << endl;
+    //cout << "Sending: " << data.toStdString() << "With length of: " << std::size(data) << endl;
     socket->write(data);
 }
 
@@ -352,7 +357,7 @@ void MainWindow::Message_Input_Action()
         if (current_widget == Global_Chat_Tab)
         {
             QJsonObject jsonMessage {{API::GLOBAL_MESSAGE, message}};
-            cout << "Sending: " << endl;
+            //cout << "Sending: " << endl;
             SendData(jsonMessage);
         }
         else if (current_widget == Lobby_Chat_Tab)

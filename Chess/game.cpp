@@ -34,6 +34,9 @@ void Game::ReceiveUpdate(QJsonObject Move)
     {
         board.Move(start, end);
     }
+    cout << "Turn changed Inside ReceiveUpdate!" << endl;
+    if (turn == Color::WHITE) { cout << "Changing to Black Turn" << endl;}
+    else if (turn == Color::BLACK) {cout << "Changing to White Turn" << endl;}
     ChangeTurn();
 }
 
@@ -47,7 +50,7 @@ void Game::Select(POS pos)
     {
         if (current_square->GetColor() != turn)
         {
-            cout << "Not your turn!" << endl;
+            cout << "Select correct color!" << endl;
         }
         else
         {
@@ -74,7 +77,7 @@ void Game::Select(POS pos)
             }
         }
     }
-    else if (player_color != turn) {std::cout << "Not your turn" << endl;}
+    else if (player_color != turn) {std::cout << "Wait for your turn!" << endl;}
     else if (selected != nullptr && selected == current_square)
     {
         cout << "Deselected: " << selected->Info() << endl;
@@ -97,6 +100,7 @@ void Game::Select(POS pos)
             //Key_Moves["Game_Update"] = Moves;
             game_widget->SendMove(Moves);
             highlighted_squares.clear();
+            cout << "Changing turn inside select" << endl;
             ChangeTurn();
             selected = nullptr;
         }
@@ -137,12 +141,13 @@ void Game::ChangeTurn()
     if (turn == Color::WHITE)
     {
         turn = Color::BLACK;
+        
     }
     else
     {
         turn = Color::WHITE;
     }
-    cout << "Turn Changed!" << endl;
+    //cout << "Turn Changed!" << endl;
 }
 
 
