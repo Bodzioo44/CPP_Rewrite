@@ -38,6 +38,7 @@ namespace Enums
 
 namespace API
 {
+    //Server to Client Join_Lobby and Create_Lobby is the same.
     const QString JOIN_LOBBY = "Join_Lobby";
     const QString CREATE_LOBBY = "Create_Lobby";
     const QString LEAVE_LOBBY = "Leave_Lobby";

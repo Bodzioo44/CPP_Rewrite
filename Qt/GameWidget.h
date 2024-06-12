@@ -17,8 +17,6 @@
 #include "Include/enums.h"
 
 
-
-
 using namespace Chess_2;
 using GameType = Enums::GameType;
 

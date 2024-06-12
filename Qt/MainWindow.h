@@ -59,6 +59,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 
         void Set_Lobby_List_Tree(QJsonObject);
         void Set_Lobby_Info_Tree(QJsonObject);
+        void Display_Message(QString message);
 
 
         QTcpSocket* socket;

@@ -58,7 +58,9 @@ MainWindow::~MainWindow()
 
     //apparently QTcpSocket doesnt inherit form QWidget, and because of that it doesnt get deleted alongside parent?
     //doesnt seem right? anyway, deleting the socket here prevents Segmentation fault (core dumped) while closing the app
-    delete socket;
+    socket->disconnect();
+    socket->disconnectFromHost();
+    socket->deleteLater();
     //delete game_widget;
     //socket and game_widget should auto delete themselves when the parent is deleted
 
@@ -95,6 +97,8 @@ void MainWindow::Message_Handler()
         if (key == API::CREATE_LOBBY)
         {
             Stacked_Widget->setCurrentWidget(Lobby_Info_Page);
+            Chat_Tab_Widget->setCurrentWidget(Lobby_Chat_Tab);
+            Lobby_Chat_Text_Edit->clear();
             QJsonObject value = it.value().toObject();
             Set_Lobby_Info_Tree(value);
 
@@ -102,18 +106,20 @@ void MainWindow::Message_Handler()
         else if (key == API::JOIN_LOBBY)
         {
             Stacked_Widget->setCurrentWidget(Lobby_Info_Page);
+            Chat_Tab_Widget->setCurrentWidget(Lobby_Chat_Tab);
+            Lobby_Chat_Text_Edit->clear();
             QJsonObject value = it.value().toObject();
             Set_Lobby_Info_Tree(value);
         }
         else if (key == API::LEAVE_LOBBY)
         {
             Stacked_Widget->setCurrentWidget(Lobby_List_Page);
+            Chat_Tab_Widget->setCurrentWidget(Global_Chat_Tab);
             Update_Lobby_List_Button_Action();  
         
         }
         else if (key == API::UPDATE_LOBBY)
         {
-            cout << "inside update lobby key";
             QJsonObject value = it.value().toObject();
             Set_Lobby_Info_Tree(value);
         }
@@ -139,6 +145,7 @@ void MainWindow::Message_Handler()
 
             Stacked_Widget->setCurrentWidget(Game_Page);
             game_widget->SetGame(GameType::CHESS_2, static_cast<Color>(Start_Lobby));
+            Chat_Tab_Widget->setCurrentWidget(Lobby_Chat_Tab);
 
             for (QJsonValue value : Game_History)
             {
@@ -154,6 +161,7 @@ void MainWindow::Message_Handler()
             for (auto i : value)
             {
                 cout << i.toString().toStdString() << endl;
+                Display_Message(i.toString());
             }
         }
         else if (key == API::UPDATE_LOBBY_LIST)
@@ -184,7 +192,6 @@ void MainWindow::Message_Handler()
             Lobby_Chat_Text_Edit->append(it.value().toString());
             Message_Input_Box->clear();
         }
-
         else
         {
             cout << "Unknown API call: " << key.toStdString() << endl;
@@ -206,6 +213,11 @@ void MainWindow::Disconnected()
 {
     cout << "Disconnected from the server!" << endl;
     Stacked_Widget->setCurrentWidget(Connection_Page);
+    Chat_Tab_Widget->setCurrentWidget(Global_Chat_Tab);
+    Lobby_List_Tree_Widget->clear();
+    Lobby_Info_Tree_Widget->clear();
+    Lobby_Chat_Text_Edit->clear();
+    Global_Chat_Text_Edit->clear();
 }
 
 /////////////////   
@@ -373,7 +385,15 @@ void MainWindow::Message_Input_Action()
     }
 }
 
+void MainWindow::Display_Message(QString message)
+{
+    QWidget* current_widget = Chat_Tab_Widget->currentWidget();
+    current_widget->findChild<QTextEdit*>()->append(message);
+}
 
+////////////////////
+///QTreeWidget Stuff
+////////////////////
 
 void MainWindow::Set_Lobby_List_Tree(QJsonObject json)
 {
